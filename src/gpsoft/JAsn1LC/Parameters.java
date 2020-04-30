@@ -5,8 +5,6 @@ public class Parameters {
 	boolean bHex = false;
 	boolean bOffSet = false;
 	boolean bTag = false;
-	boolean bLengthTag = false;
-	boolean bLengthLen = false;
 	boolean bNoLength = false;
 	boolean bNoPrimValue = false;
 	boolean bNoIndentation = false;
@@ -52,18 +50,6 @@ public class Parameters {
 	public void setbTag(boolean bTag) {
 		this.bTag = bTag;
 	}
-	public boolean isbLengthLen() {
-		return bLengthLen;
-	}
-	public void setbLengthLen(boolean bLengthLen) {
-		this.bLengthLen = bLengthLen;
-	}
-	public boolean isbLengthwTag() {
-		return bLengthLen;
-	}
-	public void setbLengthTag(boolean bLengthLen) {
-		this.bLengthLen = bLengthLen;
-	}	
 	public long getlStart() {
 		return lStart;
 	}

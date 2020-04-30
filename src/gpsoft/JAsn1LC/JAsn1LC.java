@@ -33,7 +33,7 @@ public class JAsn1LC {
 	
 	private static void displayHelp() {
         System.out.println("\n\nJAsn1LC version " + getVersion() + "(" + getYears()   + ") " + getCreator() + "\n");
-        System.out.println("Use: PrgAsn1.pl <File Asn1> [-s<File Name Conversion>] [-h] [-o] [-t] [-npv] [-lt] [-ll] [-nl] [-ni] [-b] [-e] [-help]\n");
+        System.out.println("Use: PrgAsn1.pl <File Asn1> [-s<File Name Conversion>] [-h] [-o] [-t] [-npv] [-nl] [-ni] [-b] [-e] [-help]\n");
         System.out.println("[...] are optional parameters\n\n");
         System.out.println("[-s<File Name Conversion>] : you can add a Conversion File. Each record has this format <Tag Name>|<Conversion Type>|<Desc Tag>\n");
         System.out.println("                             Values for <Conversion Type> : A for Hex to Ascii");
@@ -44,8 +44,6 @@ public class JAsn1LC {
         System.out.println("[-o]                       : Display Offset for each Tag\n");
         System.out.println("[-t]                       : Display Only value of Tag instead of Id-Tag (To use for TAP rappresentation)\n");
         System.out.println("[-npv]                     : No Display primitive Values\n");
-        System.out.println("[-lt]                      : Display len Tag in Bytes\n");
-        System.out.println("[-ll]                      : Display len Len in Bytes\n");
         System.out.println("[-nl]                      : No Display Length for Tags\n");
         System.out.println("[-ni]                      : No Tag Indentation\n");
         System.out.println("[-b]                       : Specify Byte From \n");
@@ -53,15 +51,17 @@ public class JAsn1LC {
         return;
 	}
 
-	public static void main(String args[]) {
+	public static void main(String args[]) throws Exception {
 		
 		    boolean bErr = true;
+		    boolean bHelp = false;
 		    Parameters params = new Parameters();
 		    FileAsn1 fileAsn1;
 		    FileConfAsn1 fileConfAsn1 = null;
 		    
             if ( args.length == 0 )
             {
+	            bHelp = true;
             	displayHelp();
             }
             
@@ -81,6 +81,7 @@ public class JAsn1LC {
 	    	   
 	    	   if ( arg.length() > 4 && arg.substring(0, 5).compareTo("-help") == 0 ) {
 	    		   displayHelp();
+		           bHelp = true;
 	    		   break;
 	    	   }
 
@@ -101,19 +102,7 @@ public class JAsn1LC {
                   params.setbTag(true);
                   continue;
 	    	   }		    	   
-	    	   
-	    	   // Notazione Length Tag in bytes
-	    	   if ( arg.length() > 2 && arg.substring(0, 3).compareTo("-lt") == 0 ) {
-                  params.setbLengthTag(true);
-                  continue;
-	    	   }	
-	    	   
-	    	   // Notazione Length Length in bytes
-	    	   if ( arg.length() > 2 && arg.substring(0, 3).compareTo("-ll") == 0 ) {
-                  params.setbLengthLen(true);
-                  continue;
-	    	   }		    	  
-	    	   
+    	   
 	    	   // Notazione No Length
 	    	   if ( arg.length() > 2 && arg.substring(0, 3).compareTo("-nl") == 0 ) {
                   params.setbNoLength(true);
@@ -195,6 +184,8 @@ public class JAsn1LC {
 	                 if ( params.getbFileStruct() == true ) {
 	                	 fileAsn1.setFileConfAsn1(fileConfAsn1);
     				 } 
+	                 
+				     fileAsn1.initFileAsn1(); 
 				     
 				     Utility.clearScreen();
 				     System.out.println("\n\nASN1 FILE " + params.getsFileInput() + " SIZE : " + fileAsn1.getLengthFile() + "\n");
@@ -207,9 +198,11 @@ public class JAsn1LC {
 			   }
 	        } else {
 	        	
-	        	if ( params.getsFileInput() == null ) {
-                   System.out.println("\n\nInput Asn1 File no specified.\n\n");
-	        	}
+	            if ( bHelp == false ) {
+  	        	   if ( params.getsFileInput() == null ) {
+                      System.out.println("\n\nInput Asn1 File no specified.\n\n");
+	           	   }
+	            }
 	        }
 	 }
 }

@@ -1,6 +1,6 @@
-JAsn1LC  
+# JAsn1LC
 
-A simple JAVA ASN1 BER decoder 
+A simple JAVA ASN1 BER decoder
 
 Use: PrgAsn1.pl <File Asn1> [-s<File Name Conversion>] [-h] [-o] [-t] [-npv] [-lt] [-ll] [-nl] [-ni] [-b] [-e] [-help]
 [...] are optional parameters
@@ -19,3 +19,23 @@ Use: PrgAsn1.pl <File Asn1> [-s<File Name Conversion>] [-h] [-o] [-t] [-npv] [-l
 [-ni]                      : No Tag Indentation
 [-b]                       : Specify Byte From 
 [-e]                       : Specify Byte To 
+
+## Getting Started
+
+Copy jar on your local machine. Run it "java -jar JAsn1LC.jar ....."
+
+### Prerequisites
+
+>= Java 1.7  
+
+## Built With
+
+* [Eclipse](https://www.eclipse.org/) 
+
+## Authors
+
+* **Giovanni Palleschi** - [gpalleschi](https://github.com/gpalleschi)
+
+## License
+
+This project is licensed under the GNU GENERAL PUBLIC LICENSE 3.0 License - see the [LICENSE](LICENSE) file for details

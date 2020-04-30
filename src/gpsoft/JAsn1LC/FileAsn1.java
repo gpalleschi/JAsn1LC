@@ -281,11 +281,9 @@ protected static File getsFilein() {
  public FileAsn1(String NomeFile) throws IOException {
 
     this.NomeFile = NomeFile;
-
     intBuffer = new int[1024];
     TotBuffer = 0;
     PosBuffer = 0;
-
     TagCodehex = "";
     TagCodehexToShow = "";
     TagCode = "";
@@ -293,10 +291,27 @@ protected static File getsFilein() {
     setLevel(0);
 
     raf = new RandomAccessFile(NomeFile,"rw");
-
+    
     sFilein = new File(NomeFile);
-
     lengthfilein = sFilein.length();
+    
+    
+  }
+ 
+  public void initFileAsn1() throws IOException {
+	    // Check Byte Start
+	    if (params.getlStart() >= 0) {
+	    	if ( sFilein.length() < params.getlStart() ) {
+	    	   throw new IOException("Start Byte Specified greater than file length");	
+	    	}
+	    	raf.seek(params.getlStart());
+	    }
+	    // Check Byte End
+	    if (params.getlEnd() >= 0) {
+	    	if ( sFilein.length() < params.getlEnd() ) {
+	    	   throw new IOException("End Byte Specified greater than file length");	
+	    	}
+	    }
   }
 
   public int read() throws IOException
@@ -438,10 +453,10 @@ protected static File getsFilein() {
     return offSetFile;
   }
 
-  public boolean getCtrlInfinitiveEndCtrlInfinitiveEndInfinity()
-  {
-    return isInfinity;
-  }
+  //public boolean getCtrlInfinitiveEndCtrlInfinitiveEndInfinity()
+  //{
+  //  return isInfinity;
+  //}
   
   private void displayOffSet() {
 	  if ( params.isbOffSet() ) {
@@ -453,6 +468,9 @@ protected static File getsFilein() {
 	  int iSpaces = 0;
 	  int iInd=0;
 	  int iStart=0;
+	  String convType = null;
+	  String convTypeToShow = null;
+	  String valueConv = null;
 	  
       InfoConvAsn1 info;
 	  
@@ -484,6 +502,7 @@ protected static File getsFilein() {
 			  System.out.printf("{Unknow} ");
 		  } else {
 			  System.out.printf("{%s} ", info.getLabelTag());
+			  convType = info.getTypeConv();
 		  }
 	  }
 	  
@@ -491,9 +510,32 @@ protected static File getsFilein() {
 	  if ( !params.bNoLength ) {
 		  System.out.printf("length : %d ", this.getLength());  
 	  }
-	  
-	  if ( this.getPrimitive() ) {
-		  System.out.printf(" \"%s\"h ", this.getValuehex());
+	 
+	  if ( !params.bNoPrimValue ) {
+		  
+  	    if ( this.getPrimitive() ) {
+		    System.out.printf(" \"%s\"h ", this.getValuehex());
+		  
+		    if ( params.getbFileStruct() ) {
+			    convTypeToShow = convType;
+			    if ( convType.compareTo("A") == 0 ) {
+				    valueConv = this.getValue();
+
+			    } else {
+				    if ( convType.compareTo("B") == 0 ) {
+				  	    valueConv = Utility.hexToBinary(this.getValuehex()); 
+				    } else {
+					    if ( convType.compareTo("N") == 0 ) {
+				  		    valueConv = Utility.hexToDouble(this.getValuehex());
+					    } else {
+					  	    valueConv = this.getValuehex();
+						    convTypeToShow = "H";
+					    }
+				    }
+			    }
+		    }
+		    System.out.printf("Value (%s)%s", valueConv, convTypeToShow);
+	    }
 	  }
 	  
 	  System.out.printf("\n");
@@ -531,6 +573,10 @@ protected static File getsFilein() {
 	    isInfinity = false;
 
 	    bytereaded = this.getOffSet();
+	    
+	    // End Offset setted
+	    if ( params.getlEnd() > 0 && bytereaded > params.getlEnd() ) return -2;
+	    
 	    this.setOffSetFile(bytereaded);
 	    
 	    next = this.read();
