@@ -33,7 +33,7 @@ public class FileAsn1 {
   private int id;               // Identificativo
   private int tag;              // Codice del Tag
   private boolean flag;         // Indica se Primitivo o Meno
-  private int length;           // Lunghezza del Tag
+  private long length;           // Lunghezza del Tag
   private boolean isInfinity;   // Lunghezza indefinita
   private long bytereaded;      // Byte Letti
   private long offSetFile;      // Off set sul file
@@ -60,6 +60,7 @@ public class FileAsn1 {
  	this.fileConfAsn1 = fileConfAsn1;
   }
 
+  
   protected long getlOffSetToShow() {
 	return lOffSetToShow;
   }
@@ -197,7 +198,7 @@ protected static File getsFilein() {
 
     if ( isInfinity == false )
     {
-      ValueBytes = new byte[length];
+      ValueBytes = new byte[(int)length];
       ctrlByte = this.read(ValueBytes);
       if (ctrlByte == -1) return;
       if (ctrlByte < length) return; 
@@ -239,7 +240,7 @@ protected static File getsFilein() {
   {
     return level;
   }
-  public int getLength()
+  public long getLength()
   {
     return length;
   }
@@ -421,10 +422,10 @@ protected static File getsFilein() {
     return 0;
   }
 
-  public void resetOffSet()
-  {
-    offset = 0;
-  }
+  //public void resetOffSet()
+  //{
+  //  offset = 0;
+  //}
   
   public String getValue()
   {
@@ -459,9 +460,9 @@ protected static File getsFilein() {
   //}
   
   private void displayOffSet() {
-	  if ( params.isbOffSet() ) {
-		  System.out.printf("%08d:%03d ", this.getlOffSetToShow(), this.getLevel());
-	  }
+  	  if ( params.isbOffSet() ) {
+  		  System.out.printf("%08d:%03d ", this.getlOffSetToShow(), this.getLevel());
+  	  }
   }
   
   private void displayTagCode() {
@@ -566,13 +567,14 @@ protected static File getsFilein() {
 	    int iRet=0;
 	    long lCurrentLength = 0;
 	    int iLocalLevel;
-        long startOffSet = this.getOffSet();   
+        long startOffSet = raf.getFilePointer();   
         
         this.setlOffSetToShow(startOffSet);
 
 	    isInfinity = false;
 
 	    bytereaded = this.getOffSet();
+	    
 	    
 	    // End Offset setted
 	    if ( params.getlEnd() > 0 && bytereaded > params.getlEnd() ) return -2;
@@ -723,8 +725,7 @@ protected static File getsFilein() {
 	    
 //	    System.out.printf("\nDEBUG Before While Level <%d>\n", this.getLevel());
 	    while (
-	    		
-	    		(!isInfinity && (this.getOffSet() - startOffSet ) <= lCurrentLength) ||
+	    		(!isInfinity && (raf.getFilePointer() - startOffSet ) <= lCurrentLength) ||
 	    		(isInfinity && CtrlInfinitiveEnd() == 0 )
 	    	  ) {
 	      // Recursive function
@@ -742,6 +743,4 @@ protected static File getsFilein() {
 	    this.decreaseTagCode(); 
 	    return iRet;
   }
-
-
 }
