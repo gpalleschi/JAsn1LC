@@ -567,9 +567,10 @@ protected static File getsFilein() {
 	    int iRet=0;
 	    long lCurrentLength = 0;
 	    int iLocalLevel;
-        long startOffSet = raf.getFilePointer();   
+	    long startOffSet = raf.getFilePointer();
+
         
-        this.setlOffSetToShow(startOffSet);
+        this.setlOffSetToShow(raf.getFilePointer());
 
 	    isInfinity = false;
 
@@ -723,24 +724,27 @@ protected static File getsFilein() {
 	    this.setTagCode();
 	    displayTag();
 	    
-//	    System.out.printf("\nDEBUG Before While Level <%d>\n", this.getLevel());
-	    while (
-	    		(!isInfinity && (raf.getFilePointer() - startOffSet ) <= lCurrentLength) ||
-	    		(isInfinity && CtrlInfinitiveEnd() == 0 )
-	    	  ) {
+	    if ( flag == false ) {
+	    	
+//	      if ( raf.getFilePointer() <= 1000L ) System.out.printf("\nDEBUG BEFORE isInfinity %d raf.getFilePointer() <%d> - startOffSet <%d> <= lCurrentLength <%d>\n", (isInfinity?1:0), raf.getFilePointer(), startOffSet, lCurrentLength);
+//	      if ( raf.getFilePointer() >= 3666000 ) System.out.printf("\nDEBUG BEFORE isInfinity %d raf.getFilePointer() <%d> - startOffSet <%d> <= lCurrentLength <%d>\n", (isInfinity?1:0), raf.getFilePointer(), startOffSet, lCurrentLength);
+	      while (
+	    	 	  (!isInfinity && ((raf.getFilePointer() - startOffSet ) <= lCurrentLength)) ||
+	    		  (isInfinity && CtrlInfinitiveEnd() == 0 )
+	    	    ) {
 	      // Recursive function
-//	    System.out.printf("\nDEBUG BEFORE this.getOffSet() <%d> - startOffSet <%d> <= lCurrentLength <%d>\n", this.getOffSet(), startOffSet, lCurrentLength);
-	    	iRet = readTags();
-	    	if ( iRet < 0 ) break;
-//	    System.out.printf("\nDEBUG AFTER this.getOffSet() <%d> - startOffSet <%d> <= lCurrentLength <%d>\n", this.getOffSet(), startOffSet, lCurrentLength);
-	    }
+	    	  iRet = readTags();
+	    	  if ( iRet < 0 ) break;
+	      }
 	    
 //	    System.out.printf("\n DEBUG ESCO\n");
+	    } 
 	    
-	    iLocalLevel = this.getLevel()-1;
+        iLocalLevel = this.getLevel()-1;
 	    this.setLevel(iLocalLevel);
 //	    System.out.printf("\nDEBUG After While Level <%d>\n", this.getLevel());
-	    this.decreaseTagCode(); 
+	    this.decreaseTagCode();
+//        if ( raf.getFilePointer() >= 3666000 ) System.out.printf("\nDEBUG AFTER isInfinity %d raf.getFilePointer() <%d> - startOffSet <%d> <= lCurrentLength <%d>\n", (isInfinity?1:0), raf.getFilePointer(), startOffSet, lCurrentLength);
 	    return iRet;
   }
 }
