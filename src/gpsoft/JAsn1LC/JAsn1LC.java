@@ -13,11 +13,9 @@ import java.io.IOException;
 
 public class JAsn1LC {
 	
-	static String version = "1.0";
+	static String version = "1.1";
 	static String years="2020";
 	static String creator="GPSoft By GNNK71";
-	 
-	 
 	
 	public static String getVersion() {
 	   return version;
@@ -33,7 +31,7 @@ public class JAsn1LC {
 	
 	private static void displayHelp() {
         System.out.println("\n\nJAsn1LC version " + getVersion() + "(" + getYears()   + ") " + getCreator() + "\n");
-        System.out.println("Use: PrgAsn1.pl <File Asn1> [-s<File Name Conversion>] [-h] [-o] [-t] [-npv] [-nl] [-ni] [-b] [-e] [-help]\n");
+        System.out.println("Use: java -jar JAsn1LC.jar <File Asn1> [-s<File Name Conversion>] [-h] [-o] [-t] [-npv] [-nl] [-ni] [-b] [-e] [-help]\n");
         System.out.println("[...] are optional parameters\n\n");
         System.out.println("[-s<File Name Conversion>] : you can add a Conversion File. Each record has this format <Tag Name>|<Conversion Type>|<Desc Tag>\n");
         System.out.println("                             Values for <Conversion Type> : A for Hex to Ascii");

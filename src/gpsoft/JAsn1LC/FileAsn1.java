@@ -490,10 +490,10 @@ protected static File getsFilein() {
 			System.out.printf(" "); 
 		  }
 	  }
-	  System.out.printf("%s ", this.getTagCode() );
+	  System.out.printf("[%s] ", this.getTagCode() );
 	  
 	  if ( params.isbHex() ) {
-		  System.out.printf("[%s] ", this.getTagCodehexToShow());
+		  System.out.printf("\"%s\"h ", this.getTagCodehexToShow());
 	  }
 	  
 	  if ( params.getbFileStruct() ) {
