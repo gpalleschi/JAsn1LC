@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class JAsn1LC {
 	
-	static String version = "1.1";
+	static String version = "2.0 Beta";
 	static String years="2020";
 	static String creator="GPSoft By GNNK71";
 	
@@ -30,22 +30,25 @@ public class JAsn1LC {
 	}
 	
 	private static void displayHelp() {
-        System.out.println("\n\nJAsn1LC version " + getVersion() + "(" + getYears()   + ") " + getCreator() + "\n");
-        System.out.println("Use: java -jar JAsn1LC.jar <File Asn1> [-s<File Name Conversion>] [-h] [-o] [-t] [-npv] [-nl] [-ni] [-b] [-e] [-help]\n");
-        System.out.println("[...] are optional parameters\n\n");
+        System.out.println("\nJAsn1LC version " + getVersion() + "(" + getYears()   + ") " + getCreator() + "\n");
+        System.out.println("This is a tool to decode/encode file ASN1 in BER Codification.\n");
+        System.out.println("Use: java -jar JAsn1LC.jar <File Asn1 or Ascii> [-s<File Name Conversion>] [-h] [-o] [-t] [-npv] [-nl] [-ni] [-b] [-e] [-help]\n");
+        System.out.println("[...] are optional parameters\n");
         System.out.println("[-s<File Name Conversion>] : you can add a Conversion File. Each record has this format <Tag Name>|<Conversion Type>|<Desc Tag>\n");
         System.out.println("                             Values for <Conversion Type> : A for Hex to Ascii");
         System.out.println("                                                            B for Hex to Binary");
         System.out.println("                                                            N for Hex to Number\n");
         System.out.println("                             Example Record : 1.15.43|N|Total Records\n");
-        System.out.println("[-h]                       : Display Hexadecimal Value for Tags\n");
-        System.out.println("[-o]                       : Display Offset for each Tag\n");
-        System.out.println("[-t]                       : Display Only value of Tag instead of Id-Tag (To use for TAP rappresentation)\n");
-        System.out.println("[-npv]                     : No Display primitive Values\n");
-        System.out.println("[-nl]                      : No Display Length for Tags\n");
-        System.out.println("[-ni]                      : No Tag Indentation\n");
-        System.out.println("[-b]                       : Specify Byte From \n");
-        System.out.println("[-e]                       : Specify Byte To \n");      
+        System.out.println("[-h]                       : Display Hexadecimal Value for Tags");
+        System.out.println("[-o]                       : Display Offset for each Tag");
+        System.out.println("[-t]                       : Display Only value of Tag instead of Id-Tag (To use for TAP rappresentation)");
+        System.out.println("[-npv]                     : No Display primitive Values");
+        System.out.println("[-nl]                      : No Display Length for Tags");
+        System.out.println("[-ni]                      : No Tag Indentation");
+        System.out.println("[-b]                       : Specify Byte From");
+        System.out.println("[-e]                       : Specify Byte To");
+        System.out.println("[-c<File Name Output]      : Modality Encode (Beta). This modality accepts an input file in ascii previously");
+        System.out.println("                             decoded by this tool to encode in ASN1 BER.");
         return;
 	}
 
@@ -55,6 +58,7 @@ public class JAsn1LC {
 		    boolean bHelp = false;
 		    Parameters params = new Parameters();
 		    FileAsn1 fileAsn1;
+		    FileAscii fileAscii;
 		    FileConfAsn1 fileConfAsn1 = null;
 		    
             if ( args.length == 0 )
@@ -142,12 +146,20 @@ public class JAsn1LC {
                     break;
 	    		  }
 	    	   }
+
+	    	   // Encoder
+	    	   if ( arg.length() > 1 && arg.substring(0,2).compareTo("-c") == 0 ) {
+	    		   params.setsFileOutput(arg.substring(2));
+	    		   params.setbEncode(true);
+	    		   continue;
+	    	   }
    	   
 	    	   if ( arg.substring(0, 1).compareTo("-") == 0 ) {
 		            bErr = true;
                     System.out.println("\n\nParameter <" + arg + "> not recognized.\n");
                     break;	    		   
 	    	   }
+	    	   
 	    	   
 	    	   // The last control is the input file 
     		  if ( arg.length() > 0 && Utility.isFile(arg) ) { 
@@ -173,34 +185,53 @@ public class JAsn1LC {
 				   }
 	             }
 	           
-	             if ( !fileConfAsn1.isbError() ) {
 	           
-                 // Create File Class	        	
-	             try {
-				     fileAsn1 = new FileAsn1(params.getsFileInput());
-				     fileAsn1.setParameters(params);
-	                 if ( params.getbFileStruct() == true ) {
-	                	 fileAsn1.setFileConfAsn1(fileConfAsn1);
-    				 } 
+                 if ( params.isbEncode() == false ) {
+	                	
+                    // Create File Class	        	
+	                try {
+			      	    fileAsn1 = new FileAsn1(params.getsFileInput());
+				        fileAsn1.setParameters(params);
+	                    if ( params.getbFileStruct() == true ) {
+	                  	   if ( !fileConfAsn1.isbError() ) {  
+	                         fileAsn1.setFileConfAsn1(fileConfAsn1);
+    				       } 
+    				    } 
 	                 
-				     fileAsn1.initFileAsn1(); 
+				        fileAsn1.initFileAsn1(); 
 				     
-				     Utility.clearScreen();
-				     System.out.println("\n\nASN1 FILE " + params.getsFileInput() + " SIZE : " + fileAsn1.getLengthFile() + "\n");
-				     // function read asn1
-			         fileAsn1.readTags();
-	             } catch (IOException e) {
-                     System.out.println("\n\nError in processing input file <" +  params.getsFileInput() + ">.\n");
-				     e.printStackTrace();
-			     }
-			   }
+				        Utility.clearScreen();
+				        System.out.println("\n\nASN1 FILE " + params.getsFileInput() + " SIZE : " + fileAsn1.getLengthFile() + "\n");
+				        // function read asn1
+			            fileAsn1.readTags();
+	                } catch (IOException e) {
+                           System.out.println("\n\nError in processing input file <" +  params.getsFileInput() + ">.\n");
+				           e.printStackTrace();
+			        }
+                 } else {
+	                	try {
+			      	        fileAscii = new FileAscii(params.getsFileInput(),params.getsFileOutput());
+			      	        fileAscii.setParams(params);
+			      	        
+			      	        if ( fileAscii.elabFileAscii() != 0 ) {
+			      	        	System.out.println("\n\nError in processing input file <" +  params.getsFileInput() + "> and output file <" + params.getsFileOutput() +">.\n");
+			      	            System.exit(-1);	
+			      	        }
+			      	        // DEBUG 
+			      	        fileAscii.displayTags();
+	                		
+	                	} catch (IOException e) {
+	                           System.out.println("\n\nError in processing input file <" +  params.getsFileInput() + "> and output file <" + params.getsFileOutput() +">.\n");
+					           e.printStackTrace();
+				        }
+	             }
 	        } else {
 	        	
-	            if ( bHelp == false ) {
-  	        	   if ( params.getsFileInput() == null ) {
-                      System.out.println("\n\nInput Asn1 File no specified.\n\n");
-	           	   }
-	            }
+	             if ( bHelp == false ) {
+  	        	    if ( params.getsFileInput() == null ) {
+                       System.out.println("\n\nInput Asn1 File no specified.\n\n");
+	           	    }
+	             }
 	        }
 	 }
 }

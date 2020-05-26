@@ -8,12 +8,30 @@ public class Parameters {
 	boolean bNoLength = false;
 	boolean bNoPrimValue = false;
 	boolean bNoIndentation = false;
+	boolean bEncode = false;
 	long lStart = -1;
 	long lEnd = -1;
 	boolean bFileStruct = false;
 	String sFileStruct = null;
 	String sFileInput = null;
+	String sFileOutput = null;
 	
+	protected String getsFileOutput() {
+		return sFileOutput;
+	}
+
+	protected void setsFileOutput(String sFileOutput) {
+		this.sFileOutput = sFileOutput;
+	}
+
+	protected boolean isbEncode() {
+		return bEncode;
+	}
+
+	protected void setbEncode(boolean bEncode) {
+		this.bEncode = bEncode;
+	}
+
 	public String getsFileStruct() {
 		return sFileStruct;
 	}
