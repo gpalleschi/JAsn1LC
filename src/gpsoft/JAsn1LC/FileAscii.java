@@ -1,8 +1,24 @@
+/*
+ * Copyright 2020 The jAsn1LC Author
+ *
+ * Licensed under the GNU General Public License v3.0; you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * https://www.gnu.org/licenses/gpl-3.0.html
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package gpsoft.JAsn1LC;
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +29,7 @@ public class FileAscii {
 
 	private String sFileInput;
 	private String sFileOutput;
-	private RandomAccessFile rafout;
+	private OutputStream rafout;
 	private Pattern rePatternTag;
 	private Pattern rePatternValue;
 
@@ -87,13 +103,39 @@ public class FileAscii {
 		}
 		return bRet;
 	}
-	
+
 	public void displaySingleTag(Tag tag) {
 		for(int i=0;i<tag.getiLevel();i++) System.out.print("\t");
  		if ( tag.isStruct() ) {
  	       System.out.println(tag.getTagId() + "-" + tag.getTagClass() + " isStruct : " + String.valueOf(tag.isStruct()) + " level : " + tag.getiLevel() + " length : " + tag.getLength() + " Childs : " + tag.getlTagSon().size());
  		} else {
  	       System.out.println(tag.getTagId() + "-" + tag.getTagClass() + " isStruct : " + String.valueOf(tag.isStruct()) + " level : " + tag.getiLevel() + " length : " + tag.getLength() + " Childs : " + tag.getlTagSon().size() + " Value : >" + tag.getValue() + "<");
+ 		}
+ 	}
+	
+	public void displaySingleTagToWrite(Tag tag) {
+		for(int i=0;i<tag.getiLevel();i++) System.out.print("\t");
+ 		if ( tag.isStruct() ) {
+ 	       System.out.println(tag.getTagId() + "-" + tag.getTagClass() + " Binary <" + 
+ 		                      Utility.getBinaryTagIdClass(tag.getTagId(), tag.getTagClass(), tag.isStruct()) + ">" + " Hex <" +
+ 	    		              Utility.strBinToStrHex(Utility.getBinaryTagIdClass(tag.getTagId(), tag.getTagClass(), tag.isStruct())) + ">" +
+ 	    		              " isStruct : " + String.valueOf(tag.isStruct()) + 
+ 	    		              " level : " + tag.getiLevel() + 
+ 	    		              " length : " + tag.getLength() + " Binary <" +
+ 		                      Utility.getBinaryTagLength(tag.getLength()) + ">" + " Hex <" + 
+ 	    		              Utility.strBinToStrHex(Utility.getBinaryTagLength(tag.getLength())) + ">" +
+ 	    		              " Childs : " + tag.getlTagSon().size());
+ 		} else {
+ 	       System.out.println(tag.getTagId() + "-" + tag.getTagClass() + 
+ 	    		              " isStruct : " + String.valueOf(tag.isStruct()) + " Binary <" + 
+ 		                      Utility.getBinaryTagIdClass(tag.getTagId(), tag.getTagClass(), tag.isStruct()) + ">" + " Hex <" +
+ 	    		              Utility.strBinToStrHex(Utility.getBinaryTagIdClass(tag.getTagId(), tag.getTagClass(), tag.isStruct())) + ">" +
+ 	    		              " level : " + tag.getiLevel() + 
+ 	    		              " length : " + tag.getLength() + " Binary <" +
+ 		                      Utility.getBinaryTagLength(tag.getLength()) + ">" + " Hex <" + 
+ 	    		              Utility.strBinToStrHex(Utility.getBinaryTagLength(tag.getLength())) + ">" +
+ 	    		              " Childs : " + tag.getlTagSon().size() + 
+ 	    		              " Value : >" + tag.getValue() + "<");
  		}
 	}
 	
@@ -104,6 +146,28 @@ public class FileAscii {
 		}
 	}
 	
+	
+	public int writeOnFile(String hexToWrite) {
+	   int iRet = 0;
+	   byte[] bytesToWrite = null;
+	   
+	   bytesToWrite = Utility.hexStringToByteArray(hexToWrite);
+	   if ( bytesToWrite.length <= 0 ) {
+			System.out.println("Error in hexStringToByteArray for String <" + hexToWrite + ">");
+			return -1;
+	   }
+	   try {
+		rafout.write(bytesToWrite,0,bytesToWrite.length);
+	   } catch (IOException e) {
+		 System.out.println("Error during write on " + this.sFileOutput + " for String <" + hexToWrite + ">");
+		// TODO Auto-generated catch block
+		  e.printStackTrace();
+		  iRet = -1;
+	   }
+	   
+	   return iRet;
+	}
+	
 	public void displayTags() {
  	    System.out.println("\nDISPLAY TAGS ENCODED\n");
 	 	for (Tag tag : lTags) {
@@ -111,17 +175,69 @@ public class FileAscii {
 	 	}
 	}
 	
-	public void writeTag(Tag tag) {
+	public int writeTag(Tag tag) {
+		int iRet = 0;
 		
+		String tagHex = null;
+		String tagLength = null;
+		String tagValue = null;
+		int iToFillHex;
+		
+		tagHex = Utility.getHexTagIdClass(tag.getTagId(), tag.getTagClass(), tag.isStruct());
+		if ( tagHex == null ) {
+			System.out.println("Error in getHexTagIdClass for Tag Id :" + tag.getTagId() + " and Class : " + tag.getTagClass());
+			return -1;
+		}
+		
+		if ( tagHex.length()%2 != 0 ) {
+		   iToFillHex = tagHex.length()/2;
+		   tagHex = Utility.lpad(tagHex,2*(iToFillHex+1),'0');
+		}
+		if ( writeOnFile(tagHex) != 0 ) return -1;
+		
+		tagLength = Utility.getHexTagLength(tag.getLength());
+		if ( tagLength == null ) {
+			System.out.println("Error in getHexTagLength for Tag Id :" + tag.getTagId() + " and Class : " + tag.getTagClass() + " and Length : " + tag.getLength());
+			return -1;
+		}
+		if ( tagLength.length()%2 != 0 ) {
+		   iToFillHex = tagLength.length()/2;
+		   tagLength = Utility.lpad(tagLength,2*(iToFillHex+1),'0');
+		}
+
+		if ( writeOnFile(tagLength) != 0 ) return -1;
+		
+		if ( tag.isStruct() == false ) {
+		   if ( tag.getValue().length() > 0 ) {
+			   
+		       if ( tag.getValue().length()%2 != 0 ) {
+		          iToFillHex = tag.getValue().length()/2;
+		          tagValue = Utility.lpad(tagHex,2*(iToFillHex+1),'0');
+               } else {
+            	  tagValue = tag.getValue(); 
+               }
+			   if ( writeOnFile(tagValue) != 0 ) return -1;   
+		   }
+		}
+		
+//		displaySingleTagToWrite(tag);
 		for (Tag tagSon : tag.getlTagSon()) {
 			writeTag(tagSon);
 		}
+		return iRet;
+	}
+	
+	public void displayEncodeOk() {
+	  System.out.println("\n\nJAsn1LC Encode Mode\n");
+      System.out.println("\n Input File " + this.sFileInput + " was encoded succesfully in Asn1 BER Format on Output File " + this.sFileOutput + "\n\n");
 	}
 	
 	public void writeOutFile() throws IOException {
+//	    System.out.println("\n DEBUG WRITE TAGS ENCODED\n");	
 	 	for (Tag tag : lTags) {
-	 		writeTag(tag);	
+	 		if ( writeTag(tag) != 0 ) break;	
 	 	}
+	 	rafout.close();
 	}
 	
 	public int elabFileAscii() throws IOException {
@@ -141,7 +257,7 @@ public class FileAscii {
 	   // Open File Output
        try
        {
-	     rafout = new RandomAccessFile(this.sFileOutput,"rw");
+	     rafout = new FileOutputStream(this.sFileOutput);
        }
        catch (Exception e)
        {
@@ -293,7 +409,7 @@ public class FileAscii {
 	public FileAscii(String sFileInput, String sFileOutput) throws IOException {
 		super();
 		this.sFileInput = sFileInput;
-		this.sFileOutput = sFileInput;
+		this.sFileOutput = sFileOutput;
 	    rePatternTag = Pattern.compile("(?<=\\[)([^\\]]+)(?=\\])");
 	    rePatternValue = Pattern.compile("(?<=\")([^\"]+)(?=\")");
 	}

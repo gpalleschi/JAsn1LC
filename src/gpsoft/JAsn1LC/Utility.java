@@ -1,3 +1,17 @@
+/*
+ * Copyright 2020 The jAsn1LC Author
+ *
+ * Licensed under the GNU General Public License v3.0; you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * https://www.gnu.org/licenses/gpl-3.0.html
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package gpsoft.JAsn1LC;
 
 import java.io.File;
@@ -264,11 +278,11 @@ public class Utility {
         }
      }  // end hexValue()
 	
-	public static String int2binString(long lint)
+	public static String int2binString(int lint)
 	{
-     String sRet = null;		
-     String strOutput = null;
-	 long n;
+     String sRet = "";		
+     String strOutput = "";
+	 int n;
 	 int i;
 	 n = lint;
 
@@ -291,23 +305,36 @@ public class Utility {
 
 	 return strOutput;
 	}
-
 	
-	 public static String getBinaryIdClassTag(int iTagId, int iTagClass, boolean isStruct)
-	 {
-	   String sRet = null;
-	   String classBinary;
-	   String classBinaryAppo;
-	   int iFill;
+	// Use only if in stringToFill there are no spaces
+	public static String lpad(String stringToFill, int iLength, char charToFill) {
+	    String sFrmt = "%" + iLength + "s";
+		return String.format(sFrmt,stringToFill).replace(' ', charToFill);
+	}
 
-	   if ( iTagClass > 16383 )
-	   {
-	     System.out.println("getBinaryIdClassTag Class " + iTagClass + " xceeded max value tag class permitted of 16383.");
-	     return null;
-	   }
+	// Use only if in stringToFill there are no spaces
+	public static String rpad(String stringToFill, int iLength, char charToFill) {
+	    String sFrmt = "%-" + iLength + "s";
+		return String.format(sFrmt,stringToFill).replace(' ', charToFill);
+	}
+	
+	public static String getHexTagIdClass(int iTagId, int iTagClass, boolean isStruct) {
+		return strBinToStrHex(getBinaryTagIdClass(iTagId, iTagClass, isStruct));
+	}
+	
+	public static String getBinaryTagIdClass(int iTagId, int iTagClass, boolean isStruct)
+	{
+	  String sRet = "";
+	  String classBinary;
+	  String classBinaryAppo = "";
+	  String classExtr = "";
+	  int valInt;
+	  int i;
+	  int iStart=0;
+	  int iEnd=0;
 
-	   /* Id */
-	   switch(iTagId) {
+	  /* Id */
+	  switch(iTagId) {
 	     case 1  :
 	    	 sRet += "01";
 	     break;
@@ -320,31 +347,25 @@ public class Utility {
 	     default :
 	    	 System.out.println("getBinaryIdClassTag Id " + iTagId + " not permitted.");
 	         return null;
-	   }
+	  }
 
-	   /* Type */
-	   if ( isStruct == false )
-	   {
-         sRet += "0";
-	   }
-	   else
-	   {
-         sRet += "1";
-	   }
+	  /* Type */
+	  if ( isStruct == false ) {
+        sRet += "0";
+	  } else {
+        sRet += "1";
+	  }
 	   
-	   /* Class */
-	   if ( iTagClass <= 30 )
-	   {
+	  /* Class */
+	  if ( iTagClass <= 30 ) {
 		 classBinary = int2binString(iTagClass);
 	     if ( classBinary == null )
 	     {
 	       System.out.println("Error in function int2binString for iTagClass " + iTagClass);
 	       return null;
 	     }
-	     sRet+=String.format("%05d", Integer.parseInt(classBinary));
-	   }
-	   else
-	   {
+	     sRet+=lpad(classBinary,5,'0');
+	  } else {
 		 sRet+="11111";  
 		 classBinaryAppo = int2binString(iTagClass);
 	     if ( classBinaryAppo == null )
@@ -352,51 +373,98 @@ public class Utility {
 	       System.out.println("Error in function int2binString for iTagClass " + iTagClass);
 	       return null;
 	     }  
+	     valInt = classBinaryAppo.length()/8;
+	     if ( classBinaryAppo.length()%8 != 0 ) valInt++;
+	     classBinaryAppo = lpad(classBinaryAppo,valInt*8,'0');
+
+	     valInt = classBinaryAppo.length()/6;
+	     if ( classBinaryAppo.length()%6 != 0 ) valInt++;
 	     
-	     if ( iTagClass >= 128 )
-	     {
-           classBinaryAppo=String.format("%016d", Integer.parseInt(classBinaryAppo));
-	     }
-	     else
-	     {
-           classBinaryAppo=String.format("%08d", Integer.parseInt(classBinaryAppo));
-	     }
-       }
-
-	     // FINO A QUI .............................................................................
-	     /* 
-	     if ( classBinaryAppo.length() == 16 )
-	       {
-	         strncpy(cpAppoClassAppo,cpAppoClass,512);
-	         strncpy(&cpAppoClass[1],&cpAppoClassAppo[2],7);
-	         strncpy(&cpAppoClass[0],"1",1);
-	         strncpy(&cpAppoClass[8],"0",1);
-	       }
-
-	       iLengthClass = strlen(cpClass);
-	       cpClass = realloc(cpClass,strlen(cpClass)+strlen(cpAppoClass)+1);
-	       if ( cpClass == NULL )
-	       {
-	         snprintf(acLogMsg,MAX_LOG_SIZE, "Error <%s> for realloc() cpClass.", strerror(errno));
-	         v_002Log(E_Error, E_Internal, E_Generic, __FILE__, __LINE__, 1, acLogMsg);
-	         return E_Generic;
-	       }
-	       strncpy(&cpClass[iLengthClass],cpAppoClass,strlen(cpAppoClass));
-	       cpClass[iLengthClass+strlen(cpAppoClass)] = 0;
+	     if ( iTagClass >= 128 ) {
+	    	 String retValueGreater = "";
+	    	 String retInd = "";
+	    	 int iInd = 1;
+	    	 for(i=valInt;i>0;i--) {
+	    	    iStart = classBinaryAppo.length()-7*iInd;
+	    	    if ( iStart < 0 ) iStart = 0;
+	    	    iEnd = classBinaryAppo.length()-7*iInd+7;
+	    		if ( iInd == 1 ) {
+	                  retInd = "0";	
+		    	} else {
+		    		  retInd = "1";
+		    	}	    	    
+	            classExtr =  classBinaryAppo.substring(iStart,iEnd);
+	            classExtr = Utility.lpad(classExtr, 7, '0');
+	            
+	    		retValueGreater = retInd + classExtr + retValueGreater;
+	    		iInd++;
+	    	 }
+	    	 sRet+=retValueGreater;
+	     } else {
+           classBinaryAppo=lpad(classBinaryAppo,8,'0');
+           sRet+=classBinaryAppo;
 	     }
 
-	     *cppIdClass = realloc(*cppIdClass,4+strlen(cpClass));
-	     if ( *cppIdClass == NULL )
-	     {
-	       snprintf(acLogMsg,MAX_LOG_SIZE, "Error <%s> for calloc() cppIdClass.", strerror(errno));
-	       v_002Log(E_Error, E_Internal, E_Generic, __FILE__, __LINE__, 1, acLogMsg);
-	       return E_Generic;
-	     }
+	  }
 
-	     strncpy(&(*cppIdClass)[POS_BINARY_CLASS],cpClass,strlen(cpClass));
-	     (*cppIdClass)[3+strlen(cpClass)] = 0;
-         */
-	     return sRet;
+	  return sRet;
+	}
+	
+	public static byte[] hexStringToByteArray(String s) {
+	    int len = s.length();
+	    byte[] data = new byte[len / 2];
+	    for (int i = 0; i < len; i += 2) {
+	        data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+	                             + Character.digit(s.charAt(i+1), 16));
+	    }
+	    return data;
+	}
+	
+	public static String long2binString(long lValue ) {
+		return Long.toString(lValue, 2);
+	}
+
+	public static String getHexTagLength(long lLengthTag) {
+		return strBinToStrHex(getBinaryTagLength(lLengthTag));
+	}
+	
+	public static String getBinaryTagLength(long lLengthTag)
+	{
+	   String sRet;
+	   String sAppoLength;
+	   int iLengthInBytes;
+	   
+	   sRet = long2binString(lLengthTag);
+	   
+	   if ( lLengthTag < 127 )
+	   {
+		 sRet = lpad(sRet,8,'0');
 	   }
+	   else
+	   {
+	     iLengthInBytes = sRet.length()/8;
+	     if ( sRet.length()%8 != 0 ) iLengthInBytes++;
 
+	     sRet = lpad(sRet,8*iLengthInBytes,'0');
+	     
+	     sAppoLength =  int2binString(iLengthInBytes);
+	     sAppoLength = lpad(sAppoLength,8,'0');
+	     
+	     sRet="1"+sAppoLength.substring(1)+sRet;
+	     
+	   }
+	   return sRet;
+	}
+	
+	public static String strBinToStrHex(String sBin ) {
+		if ( sBin == null ) return null;
+		long value = Long.parseLong(sBin, 2);
+		return Long.toString(value, 16);
+	}
+
+	public static String strHexToStrBin(String sHex ) {
+		if ( sHex == null ) return null;
+		long value = Long.parseLong(sHex, 16);
+		return Long.toString(value, 2);
+	}
 }
