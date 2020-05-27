@@ -19,8 +19,9 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,6 +33,9 @@ public class FileAscii {
 	private OutputStream rafout;
 	private Pattern rePatternTag;
 	private Pattern rePatternValue;
+	
+	private long lRecIn;
+	private long lRecElab;
 
 	private Parameters params;
 	private List<Tag> lTags;
@@ -43,6 +47,46 @@ public class FileAscii {
 	private int currentClassTag;
     private String currentValueTag;
     private long currentLength;
+    
+    Date startDate;
+    Date endDate;
+    
+    protected Date getStartDate() {
+		return startDate;
+	}
+
+	protected Date getEndDate() {
+		return endDate;
+	}
+	
+	protected void setEndDate() {
+		Calendar calendar = Calendar.getInstance();
+		endDate = calendar.getTime();
+	}
+
+	protected void incrRecIn() {
+      lRecIn++;	
+    }
+
+    protected void incrRecElab() {
+      lRecElab++;	
+    }
+
+	protected long getlRecIn() {
+		return lRecIn;
+	}
+
+	protected void setlRecIn(long lRecIn) {
+		this.lRecIn = lRecIn;
+	}
+
+	protected long getlRecElab() {
+		return lRecElab;
+	}
+
+	protected void setlRecElab(long lRecElab) {
+		this.lRecElab = lRecElab;
+	}
 
 	protected boolean isbError() {
 		return bError;
@@ -146,6 +190,17 @@ public class FileAscii {
 		}
 	}
 	
+	public void displayEncodeOk() {
+		  JAsn1LC.displayHeader();
+		  System.out.println("\nASN1 BER ENCODE MODE\n");
+		  System.out.println("\nStart Elaboration          : " + this.getStartDate());
+		  System.out.println("\nEnd   Elaboration          : " + this.getEndDate());
+	      System.out.println("\nInput File                 : " + this.sFileInput );
+	      System.out.println("\nTotal Records Input        : " + this.getlRecIn());
+	      System.out.println("\nTotal Records Elaborated   : " + this.getlRecElab());
+	      System.out.println("\nOutput File                : " + this.sFileOutput);
+	      System.out.println("\nStatus                     : Encoded Succesfully\n\n\n");
+	}
 	
 	public int writeOnFile(String hexToWrite) {
 	   int iRet = 0;
@@ -227,10 +282,7 @@ public class FileAscii {
 		return iRet;
 	}
 	
-	public void displayEncodeOk() {
-	  System.out.println("\n\nJAsn1LC Encode Mode\n");
-      System.out.println("\n Input File " + this.sFileInput + " was encoded succesfully in Asn1 BER Format on Output File " + this.sFileOutput + "\n\n");
-	}
+
 	
 	public void writeOutFile() throws IOException {
 //	    System.out.println("\n DEBUG WRITE TAGS ENCODED\n");	
@@ -253,6 +305,10 @@ public class FileAscii {
 	   lTags = new ArrayList<Tag>();
 	   this.currentTag = null;
 	   currentLevel = -1;
+	   Calendar calendar = Calendar.getInstance();
+	   
+	   // Start Date
+	   startDate = calendar.getTime();
 	   
 	   // Open File Output
        try
@@ -279,8 +335,9 @@ public class FileAscii {
 			 //
 			 
 //			 System.out.println("DEBUG RECORD <"+record+"> current Level : "+currentLevel);
-
 			 // If encountered ...[....]... get tag
+			 this.incrRecIn(); 
+			 
 			 if ( record.matches("^.*\\[.*\\].*$") == true ) {
                  iInd = 0;
 				 m = rePatternTag.matcher(record);
@@ -303,6 +360,7 @@ public class FileAscii {
 			    	 }
 			     }
 			     if ( iRet != 0 ) break;
+			     this.incrRecElab(); 
 			 } else {
 				continue; 
 			 }

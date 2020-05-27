@@ -43,8 +43,14 @@ public class JAsn1LC {
 		return creator;
 	}
 	
+	public static void displayHeader() {
+		System.out.println("\nJAsn1LC version " + getVersion() + "(" + getYears()   + ") " + getCreator() + "\n");
+	}
+	
+
+	
 	private static void displayHelp() {
-        System.out.println("\nJAsn1LC version " + getVersion() + "(" + getYears()   + ") " + getCreator() + "\n");
+		displayHeader();
         System.out.println("This is a tool to decode/encode file ASN1 in BER Codification.\n");
         System.out.println("Use: java -jar JAsn1LC.jar <File Asn1 or Ascii> [-s<File Name Conversion>] [-h] [-o] [-t] [-npv] [-nl] [-ni] [-b] [-e] [-help]\n");
         System.out.println("[...] are optional parameters\n");
@@ -233,11 +239,10 @@ public class JAsn1LC {
 			      	        }
 			      	        // Write Output file
 			      	        fileAscii.writeOutFile();
+			      	        fileAscii.setEndDate();
 			      	        
-			      	        // Display Final Message 
+			      	        // Display End File 
 			      	        fileAscii.displayEncodeOk();
-			      	        
-			      	        
 	                		
 	                	} catch (IOException e) {
 	                           System.out.println("\n\nError in processing input file <" +  params.getsFileInput() + "> and output file <" + params.getsFileOutput() +">.\n");
