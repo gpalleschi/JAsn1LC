@@ -248,16 +248,31 @@ public class FileAscii {
 		   iToFillHex = tagHex.length()/2;
 		   tagHex = Utility.lpad(tagHex,2*(iToFillHex+1),'0');
 		}
+		
+		if (params.isbDebugEncode() ) {
+		   System.out.println("DEBUG : Tag " + tag.getTagId() + "-" + tag.getTagClass() + " Tag hex <" + tagHex + "> : " + tagHex.length()/2);	
+		}
+		
 		if ( writeOnFile(tagHex) != 0 ) return -1;
 		
-		tagLength = Utility.getHexTagLength(tag.getLength());
-		if ( tagLength == null ) {
-			System.out.println("Error in getHexTagLength for Tag Id :" + tag.getTagId() + " and Class : " + tag.getTagClass() + " and Length : " + tag.getLength());
-			return -1;
+		if ( tag.isDefiniteLength() == true ) {
+			
+		   tagLength = Utility.getHexTagLength(tag.getLength());
+		   if ( tagLength == null ) {
+			   System.out.println("Error in getHexTagLength for Tag Id :" + tag.getTagId() + " and Class : " + tag.getTagClass() + " and Length : " + tag.getLength());
+			   return -1;
+	      	}
+		   if ( tagLength.length()%2 != 0 ) {
+		      iToFillHex = tagLength.length()/2;
+		      tagLength = Utility.lpad(tagLength,2*(iToFillHex+1),'0');
+	   	   }
+		} else {
+			// indefinite length
+			tagLength = "80";	
 		}
-		if ( tagLength.length()%2 != 0 ) {
-		   iToFillHex = tagLength.length()/2;
-		   tagLength = Utility.lpad(tagLength,2*(iToFillHex+1),'0');
+		
+		if (params.isbDebugEncode() ) {
+		   System.out.println("DEBUG : Tag " + tag.getTagId() + "-" + tag.getTagClass() + " length hex <" + tagLength + "> : " + tagLength.length()/2);	
 		}
 
 		if ( writeOnFile(tagLength) != 0 ) return -1;
@@ -271,6 +286,9 @@ public class FileAscii {
                } else {
             	  tagValue = tag.getValue(); 
                }
+		       if (params.isbDebugEncode() ) {
+		          System.out.println("DEBUG : Tag " + tag.getTagId() + "-" + tag.getTagClass() + " value hex <" + tagValue + "> : " + tagValue.length()/2);	
+	       	   }
 			   if ( writeOnFile(tagValue) != 0 ) return -1;   
 		   }
 		}
@@ -279,6 +297,12 @@ public class FileAscii {
 		for (Tag tagSon : tag.getlTagSon()) {
 			writeTag(tagSon);
 		}
+
+// End Indefinitive Length Tag
+		if ( tag.isDefiniteLength() == false ) {
+		   if ( writeOnFile("0000") != 0 ) return -1;
+		}
+		
 		return iRet;
 	}
 	
@@ -294,6 +318,7 @@ public class FileAscii {
 	
 	public int elabFileAscii() throws IOException {
        String record;
+       String tagsValueExtr;
        BufferedReader reader;
        Matcher m;
        Tag newTag;
@@ -302,6 +327,7 @@ public class FileAscii {
 	   int iLevel = 0;
 	   boolean bGetTag = false;
 	   boolean bGetValue = false;
+	   boolean bDefiniteLength = true;
 	   lTags = new ArrayList<Tag>();
 	   this.currentTag = null;
 	   currentLevel = -1;
@@ -341,9 +367,11 @@ public class FileAscii {
 			 if ( record.matches("^.*\\[.*\\].*$") == true ) {
                  iInd = 0;
 				 m = rePatternTag.matcher(record);
+                 tagsValueExtr = "";
 				 while(m.find()) {
-					bGetTag = getTagIdClass(m.group(iInd));
-	                iLevel = getTagLevel(m.group(iInd));
+                    tagsValueExtr = m.group(iInd);
+					bGetTag = getTagIdClass(tagsValueExtr);
+	                iLevel = getTagLevel(tagsValueExtr);
 	                if ( iLevel - currentLevel > 1 ) {
                       System.out.println("ERROR - Record <" + record + "> present a level greater than one compared to the previous one.");
                       iRet = -1;
@@ -364,6 +392,12 @@ public class FileAscii {
 			 } else {
 				continue; 
 			 }
+
+			 // Check If encountered the string "indefinite length" 
+			 if ( record.matches("^.*indefinite length.*$") == true ) {
+	            bDefiniteLength = false;
+			 }
+			 
 			 // If encountered ...."....."..... get hexadecimal value
 			 if ( bGetTag ) {
 				bGetValue = false; 
@@ -389,11 +423,17 @@ public class FileAscii {
 			if ( iRet != 0 ) break;
 			
 			if ( iRet == 0 ) {
-//			   System.out.println("DEBUG Create new TAG " + currentIdTag + "-" + currentClassTag + " Level : " + iLevel + " isStruct " + String.valueOf(!bGetValue));	
-			   newTag = new Tag(currentIdTag,currentClassTag,iLevel,!bGetValue);
+               if (params.isbDebugEncode() ) {
+ 			      System.out.println("Create new TAG " + currentIdTag + "-" + currentClassTag + " Level : " + iLevel + " isStruct " + String.valueOf(!bGetValue));	
+               }
+			   newTag = new Tag(currentIdTag,currentClassTag,iLevel,!bGetValue, bDefiniteLength);
 			   currentLength = Utility.getTagStructLen(currentIdTag, currentClassTag);
 			   if ( bGetValue ) {
 				 currentLength+=currentValueTag.length()/2;
+			     if ( bDefiniteLength == false ) {
+			    	 // In Indefinitive Length there are two bytes 0000h 
+			    	 currentLength+=2; 
+			     }
 				 currentLength+=Utility.getTagLenLength(currentLength);
 			     newTag.setValue(currentValueTag);	   
 			     newTag.setLength(currentValueTag.length()/2);
@@ -446,6 +486,9 @@ public class FileAscii {
 	                 currentLevel = iLevel;
 				   }
 			   }
+               if (params.isbDebugEncode() ) {
+ 			     System.out.println("AddLengthFathers for " + currentIdTag + "-" + currentClassTag + " Length : " + currentLength);
+               }
 			   // Add Calculate Length to Parents
 			   if ( currentTag.getTagFather() != null ) currentTag.addLengthFathers(currentLength);
 			}

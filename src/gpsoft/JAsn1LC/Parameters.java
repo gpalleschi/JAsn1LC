@@ -26,10 +26,20 @@ public class Parameters {
 	long lStart = -1;
 	long lEnd = -1;
 	boolean bFileStruct = false;
+	boolean bDebugEncode = false;
 	String sFileStruct = null;
 	String sFileInput = null;
 	String sFileOutput = null;
 	
+	
+	protected boolean isbDebugEncode() {
+		return bDebugEncode;
+	}
+
+	protected void setbDebugEncode(boolean bDebugEncode) {
+		this.bDebugEncode = bDebugEncode;
+	}
+
 	protected String getsFileOutput() {
 		return sFileOutput;
 	}

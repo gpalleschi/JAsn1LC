@@ -158,7 +158,7 @@ public class Utility {
         }
         return part2;		
 	}
-	
+    // Max tag class supported is 2.097.151	
 	public static int getTagStructLen(int iTagId, int iTagClass) {
 	    int iLength;
 	    if ( iTagClass <= 30 )
@@ -173,7 +173,11 @@ public class Utility {
 	      }
 	      else
 	      {
-	        iLength = 3;
+	    	if ( iTagClass < 16384 ) {
+	          iLength = 3;
+	    	} else {
+	          iLength = 4;
+	    	}
 	      }
 	    }
 	    return iLength;
@@ -395,8 +399,9 @@ public class Utility {
 		    	}	    	    
 	            classExtr =  classBinaryAppo.substring(iStart,iEnd);
 	            classExtr = Utility.lpad(classExtr, 7, '0');
-	            
-	    		retValueGreater = retInd + classExtr + retValueGreater;
+	            if ( Integer.valueOf(classExtr).intValue() != 0 || i != 1 ) {
+	    		  retValueGreater = retInd + classExtr + retValueGreater;
+	            }
 	    		iInd++;
 	    	 }
 	    	 sRet+=retValueGreater;

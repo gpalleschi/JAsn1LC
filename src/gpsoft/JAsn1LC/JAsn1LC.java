@@ -27,7 +27,7 @@ import java.io.IOException;
 
 public class JAsn1LC {
 	
-	static String version = "2.0 Beta";
+	static String version = "2.0";
 	static String years="2020";
 	static String creator="GPSoft By GNNK71";
 	
@@ -46,8 +46,6 @@ public class JAsn1LC {
 	public static void displayHeader() {
 		System.out.println("\nJAsn1LC version " + getVersion() + "(" + getYears()   + ") " + getCreator() + "\n");
 	}
-	
-
 	
 	private static void displayHelp() {
 		displayHeader();
@@ -130,6 +128,12 @@ public class JAsn1LC {
                   params.setbNoLength(true);
                   continue;
 	    	   }	
+
+	    	   // Debug Encode
+	    	   if ( arg.length() > 2 && arg.substring(0, 3).compareTo("-dc") == 0 ) {
+                  params.setbDebugEncode(true);
+                  continue;
+	    	   }		    	   
 	    	   
 	    	   // No Indentation
 	    	   if ( arg.length() > 2 && arg.substring(0, 3).compareTo("-ni") == 0 ) {
@@ -159,6 +163,12 @@ public class JAsn1LC {
 	    	   if ( arg.length() > 1 && arg.substring(0, 2).compareTo("-e") == 0 ) {
 	    		  if ( Utility.isNumeric(arg.substring(2)) ) {
 	    			params.setlEnd(Long.parseLong(arg.substring(2)));  
+	    			if ( params.getlStart() >= 0 && params.getlStart() >= params.getlEnd() ) {
+		               bErr = true;
+                       System.out.println("\n\nFor parameter -e (offset end) specified  a value <" + arg.substring(2) + 
+                    		              "> less than (offset start) <" + params.getlStart() + "> .\n");
+                       break;
+	    			}
                     continue;
 	    		  } else {
 		            bErr = true;
@@ -205,7 +215,6 @@ public class JAsn1LC {
 				   }
 	             }
 	           
-	           
                  if ( params.isbEncode() == false ) {
 	                	
                     // Create File Class	        	
@@ -224,6 +233,14 @@ public class JAsn1LC {
 				        System.out.println("\n\nASN1 FILE " + params.getsFileInput() + " SIZE : " + fileAsn1.getLengthFile() + "\n");
 				        // function read asn1
 			            fileAsn1.readTags();
+			            
+			            // Control if end file reached 
+			            if ( params.getlEnd() < 0 && fileAsn1.getOffSet() != fileAsn1.getLengthFile() ) {
+				           System.out.println("\n\n*** WARNING END FILE NOT REACHED CURRENT OFFSET IS : " + fileAsn1.getOffSet() + "***\n");
+			            }
+			            
+			            fileAsn1.close();
+			            
 	                } catch (IOException e) {
                            System.out.println("\n\nError in processing input file <" +  params.getsFileInput() + ">.\n");
 				           e.printStackTrace();
@@ -239,10 +256,15 @@ public class JAsn1LC {
 			      	        }
 			      	        // Write Output file
 			      	        fileAscii.writeOutFile();
+
 			      	        fileAscii.setEndDate();
 			      	        
 			      	        // Display End File 
 			      	        fileAscii.displayEncodeOk();
+
+			      	        if ( params.isbDebugEncode() ) {
+			      	           fileAscii.displayTags();
+			      	        }
 	                		
 	                	} catch (IOException e) {
 	                           System.out.println("\n\nError in processing input file <" +  params.getsFileInput() + "> and output file <" + params.getsFileOutput() +">.\n");

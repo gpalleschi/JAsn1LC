@@ -23,11 +23,20 @@ public class Tag {
 	private int tagId;
 	private int tagClass;
 	private boolean isStruct;
+	private boolean isDefiniteLength;
 	private long length;
 	private String value; // Hexadecimal Value for primitive Tags
 	
 	private Tag tagFather;
 	private List<Tag> lTagSon;
+	
+	protected boolean isDefiniteLength() {
+		return isDefiniteLength;
+	}
+
+	protected void setDefiniteLength(boolean isDefiniteLength) {
+		this.isDefiniteLength = isDefiniteLength;
+	}
 
 	protected List<Tag> getlTagSon() {
 		return lTagSon;
@@ -104,9 +113,14 @@ public class Tag {
 	public void addLengthFathers(long lLength) {
 		long lDiffToAdd;
 		Tag currentFatherTag = this.tagFather;
-		lDiffToAdd = Utility.calcDiffLength(this.getLength(),lLength);
-		currentFatherTag.setLength(currentFatherTag.getLength()+lLength);
-		lLength+=lDiffToAdd;
+		if ( currentFatherTag.isDefiniteLength == true) {
+		   lDiffToAdd = Utility.calcDiffLength(this.getLength(),lLength);
+           currentFatherTag.setLength(currentFatherTag.getLength()+lLength);
+           lLength+=lDiffToAdd;
+		} else {
+			// Add Length 2 bytes for end stream indefinitive length
+			lLength+=2;	
+		}
 		if ( currentFatherTag.getTagFather() != null ) currentFatherTag.addLengthFathers(lLength);
 	}
 	
@@ -127,11 +141,12 @@ public class Tag {
 		lTagSon.add(sonTag); 
 	}
 	
-	public Tag(int tagId, int tagClass, int iLevel, boolean isStruct) {
+	public Tag(int tagId, int tagClass, int iLevel, boolean isStruct, boolean isDefiniteLength) {
 		super();
 		this.tagId = tagId;
 		this.tagClass = tagClass;
 		this.isStruct = isStruct;
+		this.isDefiniteLength = isDefiniteLength;
 		this.iLevel = iLevel;
 		this.length = 0;
 		this.value = "";

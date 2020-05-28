@@ -260,9 +260,10 @@ protected static File getsFilein() {
   }
   
 
-  public long getOffSet()
+  public long getOffSet() throws IOException
   {
-    return offset;
+	return raf.getFilePointer();
+//    return offset;
   }
 
   public long getEndOfFile() throws IOException {
@@ -356,6 +357,7 @@ protected static File getsFilein() {
     return Breaded;
   }
 
+  /****************************************************
   public int CtrlFillerRec() throws IOException
   {
     int iret = 0;
@@ -380,6 +382,7 @@ protected static File getsFilein() {
 
     return iret;
   }
+  ****************************************************/
 
   public int CtrlInfinitiveEnd() throws IOException
   {
@@ -396,6 +399,9 @@ protected static File getsFilein() {
          bytectrl[1] == 0x00)
     {
       iret = 1;
+      intBuffer[TotBuffer] = bytectrl[0];
+      intBuffer[++TotBuffer] = bytectrl[1];
+      TotBuffer++;
       offset+=2;
     }
     else
@@ -408,10 +414,6 @@ protected static File getsFilein() {
   }
 
   public void close() throws IOException {
-    raf.close();
-  }
-
-  public void CloseNew() throws IOException {
     raf.close();
   }
 
