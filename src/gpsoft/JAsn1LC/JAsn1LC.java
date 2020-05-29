@@ -236,7 +236,7 @@ public class JAsn1LC {
 			            
 			            // Control if end file reached 
 			            if ( params.getlEnd() < 0 && fileAsn1.getOffSet() != fileAsn1.getLengthFile() ) {
-				           System.out.println("\n\n*** WARNING END FILE NOT REACHED CURRENT OFFSET IS : " + fileAsn1.getOffSet() + "***\n");
+				           System.out.println("\n\n*** WARNING END FILE NOT REACHED CURRENT OFFSET IS : " + fileAsn1.getOffSet() + " ***\n");
 			            }
 			            
 			            fileAsn1.close();

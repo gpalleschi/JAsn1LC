@@ -184,6 +184,16 @@ public class Utility {
 	}
 	
 	public static int getTagLenLength(long lLength) {
+		
+		int iLengthLen = getHexTagLength(lLength).length();
+		
+		if ( iLengthLen%2 != 0 ) iLengthLen++;
+		
+	    return iLengthLen/2;
+	}
+
+	/*****************************************************
+	public static int getTagLenLength(long lLength) {
 	    int iLengthLen;
 	    long N = lLength;
 	    if ( lLength < 127 )
@@ -192,7 +202,7 @@ public class Utility {
 	    }
 	    else
 	    {
-	    /*  iLengthLen = iLength%255 + 2; */
+	    / *  iLengthLen = iLength%255 + 2; * /
 	      iLengthLen = 0;
 	      while (N != 0) {
 	             N >>= 8;
@@ -202,6 +212,7 @@ public class Utility {
 	    }
 	    return iLengthLen;
 	}
+	*****************************************************/
 
 	public static int calcDiffLength(long lOldLength, long lDeltaLength)
 	{
@@ -210,12 +221,12 @@ public class Utility {
 	  long lNewLength = lOldLength + lDeltaLength;
 	  
 	  iByteBefore = getTagLenLength(lOldLength);
-	  iByteAfter = getTagLenLength(lNewLength);;
+	  iByteAfter = getTagLenLength(lNewLength);
 
-	  if ( lOldLength < 127 && (lOldLength + lDeltaLength) >= 127 )
-	  {
-	    iByteAfter++;
-	  }
+//	  if ( lOldLength < 127 && (lOldLength + lDeltaLength) >= 127 )
+//	  {
+//	    iByteAfter++;
+//	  }
 
 	  return iByteAfter - iByteBefore;
 	}

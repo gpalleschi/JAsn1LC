@@ -52,7 +52,7 @@ Running Examples :
 In **ENCODE** Modality is necesary specify in addition to the input file, the parameter **-c** with the output file Asn1 to create, if are presents others parameters will be ingnored.
 
 In this modality, the input file is important that is in ascii format producer for previous **DECODE** run.
-Is very important that each record contains Tag, between **`[...]`** and Hexadecimal Value between **"..."** (if Tag is primitve). It's very important that Tag respect hierarchical structure where each level is separated by character dot **'.'**. Length will be recalculated, if present length value it not will be considerated.
+Is very important that each record contains Tag, between **`[...]`** and Hexadecimal Value between **"..."** (if Tag is primitve). It's very important that Tag respect hierarchical structure where each level is separated by character dot **'.'**. Length will be recalculated, if present in input Record the length value it not will be considerated.
 
 Here an example :
 

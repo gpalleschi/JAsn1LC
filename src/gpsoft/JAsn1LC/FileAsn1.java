@@ -584,6 +584,8 @@ protected static File getsFilein() {
 	    long lCurrentLength = 0;
 	    int iLocalLevel;
 	    long startOffSet = raf.getFilePointer();
+	    
+	    long nextEnd=0;
 
         
         this.setlOffSetToShow(raf.getFilePointer());
@@ -744,6 +746,7 @@ protected static File getsFilein() {
 	    	
 //	      if ( raf.getFilePointer() <= 1000L ) System.out.printf("\nDEBUG BEFORE isInfinity %d raf.getFilePointer() <%d> - startOffSet <%d> <= lCurrentLength <%d>\n", (isInfinity?1:0), raf.getFilePointer(), startOffSet, lCurrentLength);
 //	      if ( raf.getFilePointer() >= 3666000 ) System.out.printf("\nDEBUG BEFORE isInfinity %d raf.getFilePointer() <%d> - startOffSet <%d> <= lCurrentLength <%d>\n", (isInfinity?1:0), raf.getFilePointer(), startOffSet, lCurrentLength);
+	      if ( !isInfinity ) nextEnd=raf.getFilePointer()+lCurrentLength;
 	      while (
 	    	 	  (!isInfinity && ((raf.getFilePointer() - startOffSet ) <= lCurrentLength)) ||
 	    		  (isInfinity && CtrlInfinitiveEnd() == 0 )
@@ -751,6 +754,14 @@ protected static File getsFilein() {
 	      // Recursive function
 	    	  iRet = readTags();
 	    	  if ( iRet < 0 ) break;
+	      }
+	      
+	      // Check if end tag is correct
+	      if ( iRet == 0 && !isInfinity && raf.getFilePointer() != getLengthFile() ) {
+	    	  if ( nextEnd != raf.getFilePointer() ) {
+	    		 System.out.println("\n ERROR End of Tag expected is " + nextEnd + " instead of " + raf.getFilePointer());  
+	    		 iRet=-1;
+	    	  }
 	      }
 	    
 //	    System.out.printf("\n DEBUG ESCO\n");

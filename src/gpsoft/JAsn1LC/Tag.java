@@ -114,12 +114,14 @@ public class Tag {
 		long lDiffToAdd;
 		Tag currentFatherTag = this.tagFather;
 		if ( currentFatherTag.isDefiniteLength == true) {
-		   lDiffToAdd = Utility.calcDiffLength(this.getLength(),lLength);
+		   lDiffToAdd = Utility.calcDiffLength(currentFatherTag.getLength(),lLength);
+//	       System.out.println("DEBUG TO DELETE **** current Length : " + this.getLength() + " Length to add : " + lLength + " lDiffToAdd : " + lDiffToAdd);
            currentFatherTag.setLength(currentFatherTag.getLength()+lLength);
+//		   System.out.println("DEBUG TO DELETE **** Tag " + currentFatherTag.getTagId() + "-" + currentFatherTag.getTagClass() + " Add Length " + lLength + " New Length is " + currentFatherTag.getLength());
            lLength+=lDiffToAdd;
 		} else {
-			// Add Length 2 bytes for end stream indefinitive length
-			lLength+=2;	
+           // Add Length 2 bytes for end stream indefinitive length
+           lLength+=2;	
 		}
 		if ( currentFatherTag.getTagFather() != null ) currentFatherTag.addLengthFathers(lLength);
 	}
