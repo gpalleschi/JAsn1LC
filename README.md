@@ -56,12 +56,12 @@ Is very important that each record contains Tag, between **`[...]`** and Hexadec
 
 Here an example :
 
-`00000000:001` **`[`<span style="color:red">1</span>`]`**` {TransferBatch} length : 10140490`
-`00000005:002` **`[1.`<span style="color:red">4</span>`]`**` {BatchControlInfo} length : 119`
-`00000007:003` **`[1.4.`<span style="color:red">196</span>`]`**` {Sender} length : 5  `**`"415247544d"`**`h Value (ARGTM)A`
-`00000007:003` **`[1.4.`<span style="color:red">101</span>`]`**` {Sender} length : 2  `**`"4152"`**`h Value (AR)A`
-`00000126:002`   **`[1.`<span style="color:red">5</span>`]`**` {AccountingInfo} length : 42`
-`00000128:003`     **`[1.5.`<span style="color:red">211</span>`]`**` {TaxationList} length : 0`
+`00000000:001` **`[`<span style="color:red">1</span>`]`**` {TransferBatch} length : 10140490`  
+`00000005:002` **`[1.`<span style="color:red">4</span>`]`**` {BatchControlInfo} length : 119`  
+`00000007:003` **`[1.4.`<span style="color:red">196</span>`]`**` {Sender} length : 5  `**`"415247544d"`**`h Value (ARGTM)A`  
+`00000007:003` **`[1.4.`<span style="color:red">101</span>`]`**` {Sender} length : 2  `**`"4152"`**`h Value (AR)A`  
+`00000126:002`   **`[1.`<span style="color:red">5</span>`]`**` {AccountingInfo} length : 42`  
+`00000128:003`     **`[1.5.`<span style="color:red">211</span>`]`**` {TaxationList} length : 0`  
 
 Running Example : 
 
