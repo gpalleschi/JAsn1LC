@@ -9,18 +9,18 @@
 Parameters `[...]` are optional
 Parameters `<...>` are mandatory
 
-**`<File Asn1/Text>`**           : Input File Asn1 **_(DECODE MODE)_** or Text **_(ENCODE)_**
-**`[-s<File Name Conversion>]`** : Conversion File. **_(DECODE MODE)_**
-**`[-h]`**                       : Display Hexadecimal Value for Tags **_(DECODE MODE)_**
-**`[-o]`**                       : Display Offset for each Tag **_(DECODE MODE)_**
-**`[-t]`**                       : Display Only value of Tag Class instead of Id-Tag Class (To use for TAP rappresentation) **_(DECODE MODE)_**
-**`[-npv]`**                     : No Display primitive Values **_(DECODE MODE)_**
-**`[-nl]`**                      : No Display Length for Tags **_(DECODE MODE)_**
-**`[-ni]`**                      : No Tag Indentation **_(DECODE MODE)_**
-**`[-b]`**                       : Specify Byte From **_(DECODE MODE)_**
-**`[-e]`**                       : Specify Byte To  **_(DECODE MODE)_**
-**`[-c<File Name Asn1 Output>]`**: Asn1 File Output **_(ENCODE MODE)_**
-**`[-help]`**                    : Show help informations **_(ENCODE/DECODE MODE)_**
+**`<File Asn1/Text>`**           : Input File Asn1 **_(DECODE MODE)_** or Text **_(ENCODE)_**  
+**`[-s<File Name Conversion>]`** : Conversion File. **_(DECODE MODE)_**  
+**`[-h]`**                       : Display Hexadecimal Value for Tags **_(DECODE MODE)_**  
+**`[-o]`**                       : Display Offset for each Tag **_(DECODE MODE)_**  
+**`[-t]`**                       : Display Only value of Tag Class instead of Id-Tag Class (To use for TAP rappresentation) **_(DECODE MODE)_**  
+**`[-npv]`**                     : No Display primitive Values **_(DECODE MODE)_**  
+**`[-nl]`**                      : No Display Length for Tags **_(DECODE MODE)_**  
+**`[-ni]`**                      : No Tag Indentation **_(DECODE MODE)_**  
+**`[-b]`**                       : Specify Byte From **_(DECODE MODE)_**  
+**`[-e]`**                       : Specify Byte To  **_(DECODE MODE)_**  
+**`[-c<File Name Asn1 Output>]`**: Asn1 File Output **_(ENCODE MODE)_**  
+**`[-help]`**                    : Show help informations **_(ENCODE/DECODE MODE)_**  
 
 * * *
 ## Decode Mode
