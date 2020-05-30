@@ -582,6 +582,7 @@ protected static File getsFilein() {
 	    int nbyte;
 	    int iRet=0;
 	    long lCurrentLength = 0;
+	    boolean currentInfinity = false;
 	    int iLocalLevel;
 	    long startOffSet = raf.getFilePointer();
 	    
@@ -744,12 +745,13 @@ protected static File getsFilein() {
 	    
 	    if ( flag == false ) {
 	    	
+	      currentInfinity = isInfinity;
 //	      if ( raf.getFilePointer() <= 1000L ) System.out.printf("\nDEBUG BEFORE isInfinity %d raf.getFilePointer() <%d> - startOffSet <%d> <= lCurrentLength <%d>\n", (isInfinity?1:0), raf.getFilePointer(), startOffSet, lCurrentLength);
 //	      if ( raf.getFilePointer() >= 3666000 ) System.out.printf("\nDEBUG BEFORE isInfinity %d raf.getFilePointer() <%d> - startOffSet <%d> <= lCurrentLength <%d>\n", (isInfinity?1:0), raf.getFilePointer(), startOffSet, lCurrentLength);
 	      if ( !isInfinity ) nextEnd=raf.getFilePointer()+lCurrentLength;
 	      while (
-	    	 	  (!isInfinity && ((raf.getFilePointer() - startOffSet ) <= lCurrentLength)) ||
-	    		  (isInfinity && CtrlInfinitiveEnd() == 0 )
+	    	 	  (!currentInfinity && ((raf.getFilePointer() - startOffSet ) <= lCurrentLength)) ||
+	    		  (currentInfinity && CtrlInfinitiveEnd() == 0 )
 	    	    ) {
 	      // Recursive function
 	    	  iRet = readTags();
@@ -757,7 +759,7 @@ protected static File getsFilein() {
 	      }
 	      
 	      // Check if end tag is correct
-	      if ( iRet == 0 && !isInfinity && raf.getFilePointer() != getLengthFile() ) {
+	      if ( iRet == 0 && !currentInfinity && raf.getFilePointer() != getLengthFile() ) {
 	    	  if ( nextEnd != raf.getFilePointer() ) {
 	    		 System.out.println("\n ERROR End of Tag expected is " + nextEnd + " instead of " + raf.getFilePointer());  
 	    		 iRet=-1;

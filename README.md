@@ -1,10 +1,10 @@
 # JAsn1LC
-* * *
+
 ## Description
 
 **A JAVA ASN1 BER (Basic Encoding Rules) encoder/decoder. This tool can decode/encode any type of ASN1 BER File.**
 
-**Use: java -jar JAsn1LC.jar `<File Asn1/Text>` `[-s<File Name Conversion>]` `[-h]` `[-o]` `[-t]` `[-npv]` `[-lt]` `[-ll]` `[-nl]` `[-ni]` `[-b]` `[-e]` `[-c<File Name Asn1 Output>]` `[-help]`**
+Use: `java -jar JAsn1LC.jar <File Asn1/Text>` `[-s<File Name Conversion>]` `[-h]` `[-o]` `[-t]` `[-npv]` `[-lt]` `[-ll]` `[-nl]` `[-ni]` `[-b]` `[-e]` `[-c<File Name Asn1 Output>]` `[-help]`
 
 Parameters `[...]` are optional
 Parameters `<...>` are mandatory
@@ -22,7 +22,6 @@ Parameters `<...>` are mandatory
 **`[-c<File Name Asn1 Output>]`**: Asn1 File Output **_(ENCODE MODE)_**  
 **`[-help]`**                    : Show help informations **_(ENCODE/DECODE MODE)_**  
 
-* * *
 ## Decode Mode
 
 In **DECODE** Modality is possible specify in addition to the input file, a convertion csv file with parameter **-s**.
@@ -46,13 +45,13 @@ Running Examples :
 + **java -jar JAsn1LC.jar ../TAP312/CDARGTPARGTM00012 -sConv_TAP312 -t -h -o**
 + **java -jar JAsn1LC.jar ../TAP312/CDARGTPARGTM00012 -h -npv**
 
-* * *
 ## Encode Mode
 
 In **ENCODE** Modality is necesary specify in addition to the input file, the parameter **-c** with the output file Asn1 to create, if are presents others parameters will be ingnored.
 
 In this modality, the input file is important that is in ascii format producer for previous **DECODE** run.
-Is very important that each record contains Tag, between **`[...]`** and Hexadecimal Value between **"..."** (if Tag is primitve). It's very important that Tag respect hierarchical structure where each level is separated by character dot **'.'**. Length will be recalculated, if present in input Record the length value it not will be considerated.
+It's very important that each record contains Tag, between **`[...]`** and Hexadecimal Value between **"..."** (if Tag is primitve). If in a record is present string **indefinite length**, Tag will be generated with infinitive length.
+It's very important that Tag respect hierarchical structure where each level is separated by character dot **'.'**. Length will be recalculated, if present in input Record the length value it not will be considerated.
 
 Here an example :
 
@@ -67,27 +66,22 @@ Running Example :
 
 + **java -jar JAsn1LC.jar -c./OUTPUT/CDARGTPARGTM00013.new ../TAP312/CDARGTPARGTM00013.txt**
 
-* * *
 ## Getting Started
 
 Copy jar on your local machine. Run it "**java -jar JAsn1LC.jar .....**"
 
-* * *
 ### Prerequisites
 
 `>= Java 1.7`  
 
-* * *
 ## Built With
 
 * [Eclipse](https://www.eclipse.org/) 
 
-* * *
 ## Authors
 
 * **Giovanni Palleschi** - [gpalleschi](https://github.com/gpalleschi)
 
-* * *
 ## License
 
 This project is licensed under the GNU GENERAL PUBLIC LICENSE 3.0 License - see the [LICENSE](LICENSE) file for details

@@ -360,7 +360,9 @@ public class FileAscii {
 			 // - Structure : 00000031:003     [1.4.108] {FileCreationTimeStamp} length : 25
 			 //
 			 
-//			 System.out.println("DEBUG RECORD <"+record+"> current Level : "+currentLevel);
+             if (params.isbDebugEncode() ) {
+			     System.out.println("DEBUG RECORD " + this.getlRecIn() + " <"+record+"> current Level : "+currentLevel);
+             }
 			 // If encountered ...[....]... get tag
 			 this.incrRecIn(); 
 			 
@@ -393,6 +395,7 @@ public class FileAscii {
 				continue; 
 			 }
 
+	         bDefiniteLength = true;
 			 // Check If encountered the string "indefinite length" 
 			 if ( record.matches("^.*indefinite length.*$") == true ) {
 	            bDefiniteLength = false;
