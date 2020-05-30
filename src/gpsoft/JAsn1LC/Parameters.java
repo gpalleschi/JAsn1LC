@@ -30,8 +30,7 @@ public class Parameters {
 	String sFileStruct = null;
 	String sFileInput = null;
 	String sFileOutput = null;
-	
-	
+
 	protected boolean isbDebugEncode() {
 		return bDebugEncode;
 	}

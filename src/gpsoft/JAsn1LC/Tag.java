@@ -115,7 +115,7 @@ public class Tag {
 		Tag currentFatherTag = this.tagFather;
 		if ( currentFatherTag.isDefiniteLength == true) {
 		   lDiffToAdd = Utility.calcDiffLength(currentFatherTag.getLength(),lLength);
-//	       System.out.println("DEBUG TO DELETE **** current Length : " + this.getLength() + " Length to add : " + lLength + " lDiffToAdd : " + lDiffToAdd);
+//	       System.out.println("DEBUG TO DELETE **** Tag " + currentFatherTag.getTagId() + "-" + currentFatherTag.getTagClass() + " Length : " + currentFatherTag.getLength() + " Length to add : " + lLength + " lDiffToAdd : " + lDiffToAdd);
            currentFatherTag.setLength(currentFatherTag.getLength()+lLength);
 //		   System.out.println("DEBUG TO DELETE **** Tag " + currentFatherTag.getTagId() + "-" + currentFatherTag.getTagClass() + " Add Length " + lLength + " New Length is " + currentFatherTag.getLength());
            lLength+=lDiffToAdd;

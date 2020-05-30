@@ -452,7 +452,7 @@ public class Utility {
 	   
 	   sRet = long2binString(lLengthTag);
 	   
-	   if ( lLengthTag < 127 )
+	   if ( lLengthTag <= 127 )
 	   {
 		 sRet = lpad(sRet,8,'0');
 	   }

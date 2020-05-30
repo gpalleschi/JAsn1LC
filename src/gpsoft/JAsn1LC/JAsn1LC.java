@@ -105,25 +105,25 @@ public class JAsn1LC {
 	    		   break;
 	    	   }
 
-	    	   // Notazione Hex
+	    	   // Hex
 	    	   if ( arg.length() > 1 && arg.substring(0, 2).compareTo("-h") == 0 ) {
                   params.setbHex(true);
                   continue;
 	    	   }
 
-	    	   // Notazione OffSet
+	    	   // OffSet
 	    	   if ( arg.length() > 1 && arg.substring(0, 2).compareTo("-o") == 0 ) {
 	    		   params.setbOffSet(true);
                   continue;
 	    	   }	
 
-	    	   // Notazione TAP
+	    	   // TAP
 	    	   if ( arg.length() > 1 && arg.substring(0, 2).compareTo("-t") == 0 ) {
                   params.setbTag(true);
                   continue;
 	    	   }		    	   
     	   
-	    	   // Notazione No Length
+	    	   // No Length
 	    	   if ( arg.length() > 2 && arg.substring(0, 3).compareTo("-nl") == 0 ) {
                   params.setbNoLength(true);
                   continue;
@@ -140,8 +140,9 @@ public class JAsn1LC {
                   params.setbNoIndentation(true);
                   continue;
 	    	   }		    	   
+
 	    	   
-	    	   // Notazione No Primitive Value
+	    	   // No Primitive Value
 	    	   if ( arg.length() > 3 && arg.substring(0, 4).compareTo("-npv") == 0 ) {
 	    		  params.setbNoPrimValue(true);
                   continue;

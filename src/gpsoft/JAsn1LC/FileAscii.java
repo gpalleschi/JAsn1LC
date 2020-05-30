@@ -401,6 +401,11 @@ public class FileAscii {
 			 // If encountered ...."....."..... get hexadecimal value
 			 if ( bGetTag ) {
 				bGetValue = false; 
+				//In case of primitive with 0 length
+			    if ( record.matches("^.*\".*\"h.*$") == true ) {
+                  currentValueTag = "";
+			      bGetValue = true;	
+			    }
 				m = rePatternValue.matcher(record);
 				while(m.find()) {
 					if ( Utility.isHexadecimal(m.group(iInd)) ) {
