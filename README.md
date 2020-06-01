@@ -12,7 +12,7 @@ Parameters `<...>` are mandatory
 **`<File Asn1/Text>`**           : Input File Asn1 **_(DECODE MODE)_** or Text **_(ENCODE)_**  
 **`[-s<File Name Conversion>]`** : Conversion File. **_(DECODE MODE)_**  
 **`[-h]`**                       : Display Hexadecimal Value for Tags **_(DECODE MODE)_**  
-**`[-o]`**                       : Display Offset for each Tag **_(DECODE MODE)_**  
+**`[-o]`**                       : Display Offset for each Tag with relative level **_(DECODE MODE)_**  
 **`[-t]`**                       : Display Only value of Tag Class instead of Id-Tag Class (To use for TAP rappresentation) **_(DECODE MODE)_**  
 **`[-npv]`**                     : No Display primitive Values **_(DECODE MODE)_**  
 **`[-nl]`**                      : No Display Length for Tags **_(DECODE MODE)_**  
@@ -23,6 +23,26 @@ Parameters `<...>` are mandatory
 **`[-help]`**                    : Show help informations **_(ENCODE/DECODE MODE)_**  
 
 ## Decode Mode
+
+This modality permits to show in standard output an ASN1 BER File.  
+Here an example of output :
+
+**java -jar JAsn1LC ./CDARGTMARGTP02595.encoded -o -t**    
+
+* * *
+`ASN1 FILE ./CDARGTMARGTP02595.encoded SIZE : 501810`  
+
+`00000000:001 [1] {TransferBatch} length : 491534`  
+`00000005:002   [1.4] {BatchControlInfo} length : 121`  
+`00000007:003     [1.4.196] {Sender} length : 5  "415247544d"h Value (ARGTM)A`  
+`00000016:003     [1.4.182] {Recipient} length : 5  "4152475450"h Value (ARGTP)A`  
+`00000025:003     [1.4.109] {FileSequenceNumber} length : 5  "3032353935"h Value (02595)A`  
+`00000033:003     [1.4.108] {FileCreationTimeStamp} length : 25`  
+`00000036:004         [1.4.108.16] {LocalTimeStamp} length : 14  "3230313831323238303730313134"h Value (20181228070114)A`  
+`00000052:004         [1.4.108.231] {UtcTimeOffset} length : 5  "2d30333030"h Value (-0300)A`  
+`00000061:003     [1.4.227] {TransferCutOffTimeStamp} length : 25`  
+`00000065:004         [1.4.227.16] {LocalTimeStamp} length : 14  "3230313831323238303730313134"h Value   (20181228070114)A`  
+* * *
 
 In **DECODE** Modality is possible specify in addition to the input file, a convertion csv file with parameter **-s**.
 Each record of this file has this format : **`<Tag Name>`**|**`<Conversion Type>`**|**`<Desc Tag>`** *\{See TAG312 and RAP15 CONV_FILE in project [ASN.1-Reader](https://github.com/gpalleschi/ASN.1-Reader)\}*.
