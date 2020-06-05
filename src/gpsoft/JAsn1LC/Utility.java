@@ -231,6 +231,41 @@ public class Utility {
 	  return iByteAfter - iByteBefore;
 	}
 
+	public static String substrBinary(String valBin, String valBinToSub){
+        // Use as radix 2 because it's binary    
+		long lValBin = Long.parseLong(valBin, 2);
+		long lValBinToSub = Long.parseLong(valBinToSub, 2);
+		long sumLBin = lValBin-lValBinToSub;
+		return Long.toBinaryString(sumLBin);
+	}	
+	
+	public static String addBinary(String valBin, String valBinToAdd){
+        // Use as radix 2 because it's binary    
+		long lValBin = Long.parseLong(valBin, 2);
+		long lValBinToAdd = Long.parseLong(valBinToAdd, 2);
+		long sumLBin = lValBin+lValBinToAdd;
+		return Long.toBinaryString(sumLBin);
+	}	
+	
+	public static String binaryCompl2(String binaryValue) {
+	  String binaryCompl2 = "";
+	  if ( binaryValue.length() > 0 && binaryValue.length()%2 == 0 ) {
+	    for(int i=0;i<binaryValue.length();i++) {
+          if ( binaryValue.charAt(i) == '0' ) {
+            binaryCompl2 += "1";  	
+          } else {
+            if ( binaryValue.charAt(i) == '1' ) {
+              binaryCompl2 += "0";  	
+            } else {
+          	  binaryCompl2 = "";   
+        	  break;
+            }
+          }
+	    }
+	  }
+	  return binaryCompl2;
+	}
+
 	public static String hexToDouble(String hexValue) {
         try {
 			return String.valueOf(Long.parseLong(hexValue, 16));

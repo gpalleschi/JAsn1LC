@@ -543,7 +543,19 @@ protected static File getsFilein() {
 				  	    valueConv = Utility.hexToBinary(this.getValuehex()); 
 				    } else {
 					    if ( convType.compareTo("N") == 0 ) {
-				  		    valueConv = Utility.hexToDouble(this.getValuehex());
+					    	if ( this.getValuehex().length() > 0 && this.getValuehex().length()%2 == 0 ) {
+					    		
+					    	  String binValue = Utility.hexToBinary(this.getValuehex());
+					    	  // Positive Integer
+					    	  if ( binValue.charAt(0) == '0' ) {
+				  		         valueConv = Utility.hexToDouble(this.getValuehex());
+					    	  } else {
+					    	  // Negative Integer
+					    	    binValue = Utility.substrBinary(binValue, "01");
+					    	    String binCompl2Value = Utility.binaryCompl2(binValue);
+					    	    valueConv = "-" + Utility.hexToDouble(Utility.strBinToStrHex(binCompl2Value));
+					    	  }
+					    	}
 					    } else {
 					  	    valueConv = this.getValuehex();
 						    convTypeToShow = "H";
