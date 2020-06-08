@@ -552,7 +552,7 @@ protected static File getsFilein() {
 					    	  } else {
 					    	  // Negative Integer
 					    	    binValue = Utility.substrBinary(binValue, "01");
-					    	    String binCompl2Value = Utility.binaryCompl2(binValue);
+					    	    String binCompl2Value = Utility.binaryCompl1(binValue);
 					    	    valueConv = "-" + Utility.hexToDouble(Utility.strBinToStrHex(binCompl2Value));
 					    	  }
 					    	}

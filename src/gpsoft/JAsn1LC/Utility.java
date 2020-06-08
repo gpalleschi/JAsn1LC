@@ -247,23 +247,23 @@ public class Utility {
 		return Long.toBinaryString(sumLBin);
 	}	
 	
-	public static String binaryCompl2(String binaryValue) {
-	  String binaryCompl2 = "";
+	public static String binaryCompl1(String binaryValue) {
+	  String binaryCompl1 = "";
 	  if ( binaryValue.length() > 0 && binaryValue.length()%2 == 0 ) {
 	    for(int i=0;i<binaryValue.length();i++) {
           if ( binaryValue.charAt(i) == '0' ) {
-            binaryCompl2 += "1";  	
+            binaryCompl1 += "1";  	
           } else {
             if ( binaryValue.charAt(i) == '1' ) {
-              binaryCompl2 += "0";  	
+              binaryCompl1 += "0";  	
             } else {
-          	  binaryCompl2 = "";   
+          	  binaryCompl1 = "";   
         	  break;
             }
           }
 	    }
 	  }
-	  return binaryCompl2;
+	  return binaryCompl1;
 	}
 
 	public static String hexToDouble(String hexValue) {
