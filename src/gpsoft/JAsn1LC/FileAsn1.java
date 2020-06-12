@@ -406,9 +406,10 @@ protected static File getsFilein() {
     }
     else
     {
-      intBuffer[TotBuffer] = bytectrl[0];
-      intBuffer[++TotBuffer] = bytectrl[1];
-      TotBuffer++;
+      raf.seek(raf.getFilePointer()-2);
+//      intBuffer[TotBuffer] = bytectrl[0];
+//      intBuffer[++TotBuffer] = bytectrl[1];
+//      TotBuffer++;
     }
     return iret;
   }
@@ -525,7 +526,11 @@ protected static File getsFilein() {
 	  
 	  // Length Tag
 	  if ( !params.bNoLength ) {
-		  System.out.printf("length : %d ", this.getLength());  
+		  if ( this.getLength() >= 0 ) {
+		     System.out.printf("length : %d ", this.getLength());  
+		  } else {
+		     System.out.printf("length : indefinite");  
+		  }
 	  }
 	 
 	  if ( !params.bNoPrimValue ) {
@@ -600,8 +605,6 @@ protected static File getsFilein() {
 	    long startOffSet = raf.getFilePointer();
 	    
 	    long nextEnd=0;
-	    
-
         
         this.setlOffSetToShow(raf.getFilePointer());
 
@@ -756,6 +759,7 @@ protected static File getsFilein() {
 	    this.setLevel(this.getLevel()+1);
 	    this.setTagCode();
 	    displayTag();
+        this.setlOffSetToShow(raf.getFilePointer());
 	    
 	    if ( flag == false ) {
 	    	
