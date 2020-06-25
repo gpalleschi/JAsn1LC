@@ -508,13 +508,14 @@ public class Utility {
 	}
 	
 	public static String strBinToStrHex(String sBin ) {
-		if ( sBin == null ) return null;
-		long value = Long.parseLong(sBin, 2);
+		long value = 0L;
+		if ( sBin == null || sBin.length() == 0 ) return null;
+		value = Long.parseLong(sBin, 2);
 		return Long.toString(value, 16);
 	}
 
 	public static String strHexToStrBin(String sHex ) {
-		if ( sHex == null ) return null;
+		if ( sHex == null || sHex.length() == 0 ) return null;
 		long value = Long.parseLong(sHex, 16);
 		return Long.toString(value, 2);
 	}
