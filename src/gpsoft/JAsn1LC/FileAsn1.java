@@ -567,8 +567,8 @@ protected static File getsFilein() {
 					    }
 				    }
 			    }
+		        System.out.printf("Value (%s)%s", valueConv, convTypeToShow);
 		    }
-		    System.out.printf("Value (%s)%s", valueConv, convTypeToShow);
 	    }
 	  }
 	  
