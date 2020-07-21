@@ -410,6 +410,7 @@ protected static File getsFilein() {
 //      intBuffer[TotBuffer] = bytectrl[0];
 //      intBuffer[++TotBuffer] = bytectrl[1];
 //      TotBuffer++;
+      offset-=2;
     }
     return iret;
   }

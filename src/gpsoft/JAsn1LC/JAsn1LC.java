@@ -27,8 +27,8 @@ import java.io.IOException;
 
 public class JAsn1LC {
 	
-	static String version = "2.4";
-	static String years="02/07/2020";
+	static String version = "2.5";
+	static String years="21/07/2020";
 	static String creator="GPSoft By GNNK71";
 	
 	public static String getVersion() {
