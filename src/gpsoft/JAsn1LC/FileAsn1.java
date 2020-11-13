@@ -30,7 +30,7 @@ import java.io.RandomAccessFile;
 public class FileAsn1 {
 
   private static File sFilein;
-  private static long offset = 0;
+//  private static long offset = 0;
 
   private static int[] intBuffer;
   private static int TotBuffer=0;
@@ -87,6 +87,10 @@ public class FileAsn1 {
 	  return TagCode;
   }
 
+  protected void setTagCode(String valueTagCode) {
+    TagCode = valueTagCode;  
+  }
+
   protected void setTagCode() {
 	  if ( this.getLevel() > 1 ) {
 		  TagCode = TagCode + ".";
@@ -123,12 +127,8 @@ public class FileAsn1 {
 	return tag;
   }
 
-protected static File getsFilein() {
+  protected static File getsFilein() {
   	return sFilein;
-  }
-
-  protected static long getOffset() {
-  	return offset;
   }
 
   protected static int[] getIntBuffer() {
@@ -343,9 +343,8 @@ protected static File getsFilein() {
     {
       iret = raf.read();
     }
-    offset++;
     
-    if ( offset > lengthfilein) iret = -2;
+    if ( raf.getFilePointer() > lengthfilein) iret = -2;
     return iret;
   }
 
@@ -353,36 +352,8 @@ protected static File getsFilein() {
   {
     int Breaded;
     Breaded = raf.read(readbyte);
-    offset+=Breaded;
     return Breaded;
   }
-
-  /****************************************************
-  public int CtrlFillerRec() throws IOException
-  {
-    int iret = 0;
-    byte[] bytectrl;
-    bytectrl = new byte[1];
-    TotBuffer = 0;
-    PosBuffer = 0;
-    do
-    {
-      if ( raf.read(bytectrl) != 1 ) return -1;
-
-      if ( bytectrl[0] != 0x00 )
-      {
-        intBuffer[TotBuffer] = bytectrl[0];
-        TotBuffer++;
-      }
-      else
-      {
-        offset++;
-      }
-    } while (bytectrl[0] == 0x00 );
-
-    return iret;
-  }
-  ****************************************************/
 
   public int CtrlInfinitiveEnd() throws IOException
   {
@@ -402,7 +373,6 @@ protected static File getsFilein() {
       intBuffer[TotBuffer] = bytectrl[0];
       intBuffer[++TotBuffer] = bytectrl[1];
       TotBuffer++;
-      offset+=2;
     }
     else
     {
@@ -410,7 +380,6 @@ protected static File getsFilein() {
 //      intBuffer[TotBuffer] = bytectrl[0];
 //      intBuffer[++TotBuffer] = bytectrl[1];
 //      TotBuffer++;
-      offset-=2;
     }
     return iret;
   }
@@ -426,19 +395,18 @@ protected static File getsFilein() {
   public int MoveOnFileToOffset(long offsetToMove) throws IOException
   {
   	raf.seek(offsetToMove);
-    offset = offsetToMove; 
     
 //    System.out.println(" Offset real " + raf.getFilePointer());
     
     return 0;
   }
   
-  public int UpdateTagValueonFile(long offset, int towrite) throws IOException
-  {
-    raf.seek(offset);
-    raf.write(towrite);
-    return 0;
-  }
+//public int UpdateTagValueonFile(long offset, int towrite) throws IOException
+//{
+//  raf.seek(offset);
+//  raf.write(towrite);
+//  return 0;
+// }
 
   //public void resetOffSet()
   //{
@@ -606,7 +574,7 @@ protected static File getsFilein() {
 	    long startOffSet = raf.getFilePointer();
 	    
 	    long nextEnd=0;
-        
+	    
         this.setlOffSetToShow(raf.getFilePointer());
 
 	    isInfinity = false;
@@ -630,7 +598,6 @@ protected static File getsFilein() {
 	      setErrorMsg("FINE FILE");
 	      return -2;
 	    }
-//	    System.out.println("Letto >" + next + "<" );
 	    next = next & 0xff;
 	    TagCodehex = Integer.toHexString(next);
 

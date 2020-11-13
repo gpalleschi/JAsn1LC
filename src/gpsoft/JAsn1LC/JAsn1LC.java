@@ -27,8 +27,8 @@ import java.io.IOException;
 
 public class JAsn1LC {
 	
-	static String version = "2.5";
-	static String years="21/07/2020";
+	static String version = "2.6";
+	static String years="13/11/2020";
 	static String creator="GPSoft By GNNK71";
 	
 	public static String getVersion() {
@@ -72,6 +72,7 @@ public class JAsn1LC {
 
 	public static void main(String args[]) throws Exception {
 		
+	        int iRet=0;
 		    boolean bErr = true;
 		    boolean bHelp = false;
 		    Parameters params = new Parameters();
@@ -233,7 +234,15 @@ public class JAsn1LC {
 				        Utility.clearScreen();
 				        System.out.println("\n\nASN1 FILE " + params.getsFileInput() + " SIZE : " + fileAsn1.getLengthFile() + "\n");
 				        // function read asn1
-			            fileAsn1.readTags();
+				        while(iRet==0) {
+				          fileAsn1.setLevel(0);
+				          fileAsn1.setTagCode("");
+				          fileAsn1.resetFile();
+			              iRet = fileAsn1.readTags();
+			              if ( params.getlEnd() > 0 && fileAsn1.getOffSet() > params.getlEnd() ) {
+			            	 break; 
+			              }
+				        }
 			            
 			            // Control if end file reached 
 			            if ( params.getlEnd() < 0 && fileAsn1.getOffSet() != fileAsn1.getLengthFile() ) {
