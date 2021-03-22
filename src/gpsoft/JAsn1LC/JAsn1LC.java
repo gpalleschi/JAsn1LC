@@ -27,8 +27,8 @@ import java.io.IOException;
 
 public class JAsn1LC {
 	
-	static String version = "2.6";
-	static String years="13/11/2020";
+	static String version = "2.7";
+	static String years="22/03/2021";
 	static String creator="GPSoft By GNNK71";
 	
 	public static String getVersion() {
@@ -48,7 +48,12 @@ public class JAsn1LC {
 	}
 	
 	private static void displayHelp() {
-		displayHeader();
+		System.out.println("\n\n	      _   _              _ _     ____");
+		System.out.println("	     | | / \\   ___ _ __ / | |   / ___|");
+		System.out.println("	  _  | |/ _ \\ / __| '_ \\| | |  | |");
+		System.out.println("	 | |_| / ___ \\__  \\ | | | | |__| |___");
+		System.out.println("	  \\___/_/   \\_\\___/_| |_|_|_____\\____|");
+		displayHeader(); 
         System.out.println("This is a tool to decode/encode file ASN1 in BER Codification.\n");
         System.out.println("Use: java -jar JAsn1LC.jar <File Asn1 or Ascii> [-s<File Name Conversion>] [-h] [-o] [-t] [-npv] [-nl] [-ni] [-b] [-e] [-help]\n");
         System.out.println("[...] are optional parameters\n");
