@@ -27,8 +27,8 @@ import java.io.IOException;
 
 public class JAsn1LC {
 	
-	static String version = "2.7";
-	static String years="22/03/2021";
+	static String version = "2.8";
+	static String years="29/11/2021";
 	static String creator="GPSoft By GNNK71";
 	
 	public static String getVersion() {
@@ -70,8 +70,8 @@ public class JAsn1LC {
         System.out.println("[-ni]                      : No Tag Indentation");
         System.out.println("[-b]                       : Specify Byte From");
         System.out.println("[-e]                       : Specify Byte To");
-        System.out.println("[-c<File Name Output]      : Modality Encode (Beta). This modality accepts an input file in ascii previously");
-        System.out.println("                             decoded by this tool to encode in ASN1 BER.");
+        System.out.println("[-c<File Name Output]      : Modality Encode. (This modality accepts an input file in ascii previously");
+        System.out.println("                             decoded by this tool to encode in ASN1 BER.)");
         return;
 	}
 

@@ -119,6 +119,10 @@ public class FileAscii {
 		int sepIdClassIndex;
 		String strTagToElab = strTag;
 		
+		if ( strTag.length() == 0 ) {
+			return false;
+		}
+		
 		sepTagIndex = strTag.lastIndexOf('.');
 		
 		// Case of First Tag
@@ -128,17 +132,24 @@ public class FileAscii {
 		  if ( sepTagIndex >= 0 || strTag.length() == (sepTagIndex-1) ) return false;
 		}
 		
+		System.out.println("StrTag <" + strTag + ">");
+		
 		sepIdClassIndex = strTagToElab.indexOf('-');
-		if ( sepIdClassIndex > 0 && strTagToElab.length() != (sepIdClassIndex-1) ) {
+		System.out.println("sepIdClassIndex <" +  sepIdClassIndex + ">");
+		if ( sepIdClassIndex > 0 && strTagToElab.length()-1 != sepIdClassIndex ) {
 			
-			if ( Utility.isNumeric(strTagToElab.substring(0,sepIdClassIndex-1)) ) {
-			   this.currentIdTag = Integer.parseInt(strTagToElab.substring(0,sepIdClassIndex-1));
-			   this.currentClassTag = Integer.parseInt(strTagToElab.substring(0,sepIdClassIndex+1));
+      		System.out.println("strTagToElab.substring(0,sepIdClassIndex-1) <" +  strTagToElab.substring(0,sepIdClassIndex-1) + ">");
+      		System.out.println("strTagToElab.substring(0,sepIdClassIndex) <" +  strTagToElab.substring(0,sepIdClassIndex) + ">");
+      		System.out.println("this.currentClassTag <" +  strTagToElab.substring(0,sepIdClassIndex+1) + ">");
+      		System.out.println("this.currentClassTag OK <" +  strTagToElab.substring(sepIdClassIndex+1) + ">");
+			if ( Utility.isNumeric(strTagToElab.substring(0,sepIdClassIndex)) ) {
+			   this.currentIdTag = Integer.parseInt(strTagToElab.substring(0,sepIdClassIndex));
+			   this.currentClassTag = Integer.parseInt(strTagToElab.substring(sepIdClassIndex+1));
 			   bRet = true;
 			}
 			
 		} else {
-			if ( sepIdClassIndex >= 0 && strTagToElab.length() == (sepIdClassIndex-1) ) return false;
+			// Default value for Id is 1
 			this.currentIdTag = 1;
 			if ( Utility.isNumeric(strTagToElab) ) {
 				this.currentClassTag = Integer.parseInt(strTagToElab);
@@ -373,6 +384,11 @@ public class FileAscii {
 				 while(m.find()) {
                     tagsValueExtr = m.group(iInd);
 					bGetTag = getTagIdClass(tagsValueExtr);
+					if ( !bGetTag ) {
+                      System.out.println("ERROR - Tag <" + tagsValueExtr + "> in wrong format or not numeric.");
+                      iRet = -1;
+                      break;
+					}
 	                iLevel = getTagLevel(tagsValueExtr);
 	                if ( iLevel - currentLevel > 1 ) {
                       System.out.println("ERROR - Record <" + record + "> present a level greater than one compared to the previous one.");
