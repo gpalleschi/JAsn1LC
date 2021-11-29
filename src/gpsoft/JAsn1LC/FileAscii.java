@@ -132,16 +132,9 @@ public class FileAscii {
 		  if ( sepTagIndex >= 0 || strTag.length() == (sepTagIndex-1) ) return false;
 		}
 		
-		System.out.println("StrTag <" + strTag + ">");
-		
 		sepIdClassIndex = strTagToElab.indexOf('-');
-		System.out.println("sepIdClassIndex <" +  sepIdClassIndex + ">");
 		if ( sepIdClassIndex > 0 && strTagToElab.length()-1 != sepIdClassIndex ) {
 			
-      		System.out.println("strTagToElab.substring(0,sepIdClassIndex-1) <" +  strTagToElab.substring(0,sepIdClassIndex-1) + ">");
-      		System.out.println("strTagToElab.substring(0,sepIdClassIndex) <" +  strTagToElab.substring(0,sepIdClassIndex) + ">");
-      		System.out.println("this.currentClassTag <" +  strTagToElab.substring(0,sepIdClassIndex+1) + ">");
-      		System.out.println("this.currentClassTag OK <" +  strTagToElab.substring(sepIdClassIndex+1) + ">");
 			if ( Utility.isNumeric(strTagToElab.substring(0,sepIdClassIndex)) ) {
 			   this.currentIdTag = Integer.parseInt(strTagToElab.substring(0,sepIdClassIndex));
 			   this.currentClassTag = Integer.parseInt(strTagToElab.substring(sepIdClassIndex+1));
