@@ -13,7 +13,7 @@ Parameters `<...>` are mandatory
 **`[-s<File Name Conversion>]`** : Conversion File. **_(DECODE MODE)_**  
 **`[-h]`**                       : Display Hexadecimal Value for Tags **_(DECODE MODE)_**  
 **`[-o]`**                       : Display Offset for each Tag with relative level **_(DECODE MODE)_**  
-**`[-t]`**                       : Display Only value of Tag Class instead of Id-Tag Class (To use for TAP rappresentation) **_(DECODE MODE)_**  
+**`[-t]`**                       : Display Only value of Tag Class instead of Id-Tag Class (Used for TAP rappresentation) **_(DECODE MODE)_**  
 **`[-npv]`**                     : No Display primitive Values **_(DECODE MODE)_**  
 **`[-nl]`**                      : No Display Length for Tags **_(DECODE MODE)_**  
 **`[-ni]`**                      : No Tag Indentation **_(DECODE MODE)_**  
@@ -71,9 +71,9 @@ In **ENCODE** Modality is necesary specify in addition to the input file, the pa
 
 In this modality, the input file is important that is in ascii format producer for previous **DECODE** run.
 It's very important that each record contains Tag, between **`[...]`** and Hexadecimal Value between **"..."** (if Tag is primitve). If in a record is present string **indefinite length**, Tag will be generated with infinitive length.
-It's very important that Tag respect hierarchical structure where each level is separated by character dot **'.'**. Length will be recalculated, if present in input Record the length value it not will be considerated.
+It's very important that Tag respect hierarchical structure where each level is separated by character dot **'.'**. Length will be recalculated, if present in input Record the length value it not will be considerated. If is not present Id in Id-Tag Class will be assgned Id value to 1.
 
-Here an example :
+Here an example (In this case without Id will be assigned value to 1) :
 
 `00000000:001` **`[`<span style="color:red">1</span>`]`**` {TransferBatch} length : 10140490`  
 `00000005:002` **`[1.`<span style="color:red">4</span>`]`**` {BatchControlInfo} length : 119`  
